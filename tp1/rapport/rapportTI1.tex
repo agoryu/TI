@@ -1,0 +1,139 @@
+% --------------------------------------
+% Document Class
+% --------------------------------------
+\documentclass{article}
+% --------------------------------------
+
+
+
+% --------------------------------------
+% Use Package
+% --------------------------------------
+
+% french, english
+\usepackage[francais]{babel}
+
+% font, french accent
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc} 
+
+% page layout
+\usepackage{geometry}
+
+% hypertext link
+\usepackage[pdfpagelabels]{hyperref}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{listings}
+
+
+% include pdf
+\usepackage[final]{pdfpages}
+
+
+% --------------------------------------
+
+
+
+% --------------------------------------
+% Page setting
+% --------------------------------------
+%\pagestyle{empty}
+\setlength{\headheight}{15pt}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother 
+
+\hypersetup{         % parametrage des hyperliens
+  colorlinks=true,      % colorise les liens
+  breaklinks=true,      % permet les retours à la ligne pour les liens trop longs
+  urlcolor= blue,       % couleur des hyperliens
+  linkcolor= black,     % couleur des liens internes aux documents (index, figures, tableaux, equations,...)
+  citecolor= green      % couleur des liens vers les references bibliographiques
+}
+
+% --------------------------------------
+
+% --------------------------------------
+% Information
+% --------------------------------------
+\title{Compte-rendu TP1 TI : Sources lumineuses}
+\author{Elliot VANEGUE et Gaëtan DEFLANDRE}
+% --------------------------------------
+
+\definecolor{myColor}{rgb}{0.5, 0.1, 0.75}
+
+% --------------------------------------
+% Begin content
+% --------------------------------------
+\begin{document}
+  % for listing
+  \lstset{
+    language=Scilab,
+    commentstyle=\color{myColor}
+    }
+
+  % Set language to english
+  \selectlanguage{francais}
+
+  % Start the page counting
+  \pagenumbering{arabic}
+
+  \maketitle
+  
+  \mbox{}
+  \newpage
+  \clearpage
+  
+  \section{Introduction}
+  Nous allons, dans ce premier TP, étudier l'éclairement de différent type
+  de source lumineuse via l'outils Scilab.
+  
+  \section{Eclairement d'une source ponctuelle isotrope}
+  Une source ponctuelle isotrope est une surface lumineuse dont l'intensité lumineuse
+  est la même dans toutes les directions. Avec cette définition nous allons pouvoir
+  calculer les valeurs d'éclairement pour une surface.\\
+  
+  Détail du code donné en exemple.\\
+  
+  \begin{lstlisting}
+    //Calcul la distance entre la source lumineuse et chaque
+    //centimetre carre de la surface
+  
+    // Definition des echantillons sur un axe
+    axe = [0:99] / 100 + 5e-3; //correspond a une matrice de valeur entre 0 et 1 
+    // Definition des elements de surface
+    x = ones (1:100)' * axe; // x et y sont des matrices
+    y = axe' * ones (1:100);
+    // Position de la source -> hauteur
+    xs = 0.5;
+    ys = 0.5;
+    // Calcul de la distance
+     // ensemble des valeurs qui seront represente dans le graphe
+    d = sqrt ((x - xs).^2 + (y - ys).^2);
+    // Trace de la fonction distance
+    plot3d (axe, axe, d);
+    // Visualisation sous forme d'image en niveaux de gris
+    imshow (d);
+  \end{lstlisting}
+  
+  Nous avons modifié ce code afin de pouvoir calculer la valeur d'éclairement sur la 
+  surface de l'exemple du TP. Nous optenons un graphe comme celui-ci :
+  
+  % TODO mettre l'image du graphe
+
+  \section{Eclairement d'une source ponctuelle lambertienne}
+  %indicatrice d'émission est la sphère d'équation I = I0.cos(θ)
+  
+  
+  \section{Eclairement d'une grille de source ponctuelle}
+    
+\end{document}
