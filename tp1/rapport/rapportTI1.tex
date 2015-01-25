@@ -164,15 +164,12 @@
   
   Nous avons à nouveau modifié le code afin de prendre en compte cette dispersion de la 
   lumière. Nous obtenons le calcul suivant :
-  $ e = I0 * ((h^2) .* ((h^2 + d.^2).^(2)).^(-1)) $
+  $ e = I0 * ((h^2) .* ((h^2 + d.^2).^(2)).^(-1)) $\\
   
   % TODO a revoir
   Ici nous voyons que l'exposant du dénominateur à changé car pour une source lambertienne 
-  l'angle theta est pris deux fois. Une fois pour le départ du rayon lumineux et une second 
-  fois pour ...\\
-  
-  Ce calcul nous donne une courbe avec une pente plus importante car la lumière éclaire moins
-  les bords de la surface par rapport à une source ponctuelle isotrope.\\
+  l'angle theta intervient deux fois. Une fois pour le départ du rayon lumineux et une second 
+  fois pour déterminer la source qui éclaire chaque élément.\\
   
   \begin{figure}[!h]
     \begin{center}
@@ -182,6 +179,9 @@
   \end{figure}
   
   \newpage
+  
+  Ce calcul nous donne une courbe avec une pente plus importante car la lumière éclaire moins
+  les bords de la surface par rapport à une source ponctuelle isotrope.\\
   
   \section{Eclairement d'une grille de source ponctuelle}
     

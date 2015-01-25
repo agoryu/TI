@@ -21,6 +21,7 @@ lys = list();
 for i = 1:N
     for j = 1:N
         lxs(i)= i * pas;
+        // on ecrase des element existant !!!!!!!!!!!
         lys(j)= j * pas;
     end;
 end;
