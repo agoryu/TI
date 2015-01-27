@@ -7,26 +7,64 @@ y = axe' * ones (1:100);
 // Grille de N*N source
 N = 2;
 
-// distance entre chaque source
-pas = 1/(N+1);
+// Hauteur
+h = 0.5;
+
+// Puissance
+Phi = 100;
+
+// Soit la distance-entre-deux-sources = distance-source-mur*ratio
+ratio = N*3;
+
+// Distance source-mur
+dsm = 1 / (2 + (N-1)*ratio);
+
+// Distance source-source
+dss = dsm*ratio;
 
 // Création de la liste des positions des sources
 lxs = list();
 lys = list();
 nbSource = 0;
 
-espacedeb = 0;
-espacesize = 1/N;
-espacefin = 1/N;
+
+// Commentaires ci-dessous: solution non concluante
+//espacedeb = 0;
+//espacesize = 1/N;
+//espacefin = 1/N;
+//
+//for i = 1:N
+//    for j = 1:N
+//        nbSource = nbSource + 1;
+//        lxs(nbSource) = i * espacesize/2 + ((i-1) * (espacesize/2));
+//        lys(nbSource) = j * espacesize/2 + ((j-1) * (espacesize/2));
+//    end;
+//end;
+
+
+// sum des distance x
+sumdx = dsm;
 
 for i = 1:N
+    
+    // sum des distance y
+    sumdy = dsm;
+    
     for j = 1:N
+        
         nbSource = nbSource + 1;
-        lxs(nbSource) = i * espacesize/2 + ((i-1) * (espacesize/2));
-        lys(nbSource) = j * espacesize/2 + ((j-1) * (espacesize/2));
-        //lxs(nbSource) = i * pas;
-        //lys(nbSource) = j * pas;
+        
+        lxs(nbSource) = sumdx;
+        lys(nbSource) = sumdy;
+        
+        sumdy = sumdy + dss;
+        
     end;
+    sumdx = sumdx + dss;
+end;
+
+for i = 1:nbSource
+    mprintf('Source %d : x=%s \ty=%s\n', i, string(lxs(i)), string(lys(i)));
 end;
 
 // Calcul des distances de chaque element pour chaque source
@@ -38,14 +76,10 @@ for i = 1:nbSource
 end;
 
 
-// Puissance
-Phi=100;
-
 // Intensite energetique
 I0=Phi/2/%pi;
 
-// Hauteur
-h= 0.5;
+
 
 e = list();
 
@@ -59,7 +93,7 @@ for i = 2:nbSource
     sume = e(i) + sume;
 end;
 
-variation = (max(sume) - min(sume)) / max(sume);
+variation = ((max(sume) - min(sume)) * 100) / max(sume);
 
 disp(variation);
 
