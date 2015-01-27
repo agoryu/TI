@@ -54,19 +54,15 @@ h= 0.5;
 // L'exposant de la fin change car le cosinus de l'angle intervient 2 fois 
 e = I0 * ((h^2) .* ((h^2 + sumd.^2).^(2)).^(-1));
 
-//chaque element de la surface a une distance par rapport a chaque source lum.
-//il ne faut pas fait la somme des distances mais la somme des éclairement de
-//chaque source pour un element
-//test = list();
-//for i = 1:N
-//    for j = 1:N
-//        test(i) = test(i) + (I0 * ((h^2) / ((h^2 + ld(j)^2)^(2))));
-//    end;
-//end;
-
-//plot3d (axe, axe, test);
-//imshow (test/max(test));
 plot3d (axe, axe, e);
 imshow (e/max(e));
 
+espacedeb = 0;
+espacesize = 1/N;
+espacefin = 1/N;
+
+x(1) = espacesize/2 + espacedeb;
+espacedeb = espacefin;
+espacefin = espacefin + espacesize;
+x(2) = espacesize/2 + espacedeb;
 

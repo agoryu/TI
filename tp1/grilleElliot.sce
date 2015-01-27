@@ -15,21 +15,28 @@ lxs = list();
 lys = list();
 nbSource = 0;
 
+espacedeb = 0;
+espacesize = 1/N;
+espacefin = 1/N;
+
 for i = 1:N
     for j = 1:N
         nbSource = nbSource + 1;
-        lxs(nbSource) = i * pas;
-        lys(nbSource) = j * pas;
+        lxs(nbSource) = i * espacesize/2 + ((i-1) * (espacesize/2));
+        lys(nbSource) = j * espacesize/2 + ((j-1) * (espacesize/2));
+        //lxs(nbSource) = i * pas;
+        //lys(nbSource) = j * pas;
     end;
 end;
 
-// Calcul des distances
-ld = zeros(100,nbSource);
-for i = 1:100
-    for j = 1:nbSource
-        ld(i,j) = sqrt ((x(i) - lxs(j))^2 + (y(i) - lys(j))^2);
-    end;
+// Calcul des distances de chaque element pour chaque source
+ld = list();
+for i = 1:nbSource
+    xs = lxs(i);
+    ys = lys(i);
+    ld(i) = sqrt ((x - xs).^2 + (y - ys).^2);
 end;
+
 
 // Puissance
 Phi=100;
@@ -40,17 +47,21 @@ I0=Phi/2/%pi;
 // Hauteur
 h= 0.5;
 
-e = ones(1:100);
-for i = 1:100
-    for j = 1:nbSource
-        e(i) = e(i) + (I0 * ((h^2) / ((h^2 + ld(i,j)^2)^(2))));
-    end;
-    disp(e(i));
+e = list();
+
+for i = 1:nbSource
+    e(i) = I0 * ((h^2) .* ((h^2 + ld(i).^2).^(2)).^(-1));
 end;
 
-variation = (max(e) - min(e)) / max(e);
+
+sume = e(1); 
+for i = 2:nbSource
+    sume = e(i) + sume;
+end;
+
+variation = (max(sume) - min(sume)) / max(sume);
 
 disp(variation);
 
-//plot3d (axe, axe, e);
+plot3d (axe, axe, sume);
 //imshow (e/max(e));

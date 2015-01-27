@@ -9,6 +9,7 @@ ys = 0.5;
 
 // Calcul de la distance
 d = sqrt ((x - xs).^2 + (y - ys).^2);
+disp(d);
 
 // Puissance
 Phi=100;
