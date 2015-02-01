@@ -163,9 +163,84 @@
     \includegraphics[width=5cm]{ProjectionTranslation.png}
     \caption{Image du cube avec modification des valeur de la matrice de projection}
   \end{figure}
+  
+  Nous avons ensuite modifié ces paramètres sur une grille 2D. Nous remarquons que 
+  les transformations cités précédemment sont également valide pour cette forme 
+  excepté la rotation. Etant donné que cette forme n'est pas 3D, il n'existe pas 
+  de segment reliant deux points de coordonnées différentes dans l'axe x et donc aucune
+  modification de distance entre deux points n'est possible sur cette axe.
 
   \section{Matrice extrinsèque}
+  
+  Nous allons maintenant chercher à calculer la matrice extrinsèque. Cette matrice prend en compte
+  des paramètres qui dépendent de la position de la caméra dans l'espace de travail, comme la rotation
+  ou la translation effectué par la caméra. Pour calculer cette matrice, nous l'avons décomposé en 
+  plusieurs sous matrice que nous devrons multiplier. Voici les matrices composant la matrice extrinsèque :\\
+  
+  \begin{itemize}
+   \item matrice de rotation x : 
+   $\begin{pmatrix}
+     1 & 0 & 0\\
+     0 & cos(theta) & -sin(theta)\\
+     0 & sin(theta) & cos(theta)
+    \end{pmatrix}$
+    
+   \item matrice de rotation y : 
+   $\begin{pmatrix}
+     cos(theta) & 0 & sin(theta)\\
+     0 & 1 & 0\\
+     -sin(theta) & 0 & cos(theta)
+    \end{pmatrix}$
+    
+   \item matrice de rotation z : 
+   $\begin{pmatrix}
+     cos(theta) & -sin(theta) & 0\\
+     sin(theta) & cos(theta) & 0\\
+     0 & 0 & 1
+    \end{pmatrix}$
+    
+   \item matrice de translation : 
+   $\begin{pmatrix}
+     x\\
+     y\\
+     z
+    \end{pmatrix}$
+
+  \end{itemize}
+  
+  Une fois ces matrices définit, nous les multiplions afin d'obtenir la matrice
+  extrinsèque qui à la forme suivante :\\
+  \begin{center}
+    $\begin{pmatrix}
+      R_{x/x} & R_{x/y} & R_{x/z} & t_{x}\\
+      R_{y/x} & R_{y/y} & R_{y/z} & t_{y}\\
+      R_{z/x} & R_{z/y} & R_{z/z} & t_{z}\\
+      0 & 0 & 0 & 1
+      \end{pmatrix}$
+  \end{center}
+
+  Nous avons ensuite calculer les matrices extrinsèques de deux exemples du TP.
+  \begin{itemize}
+   \item E1 : Cette exemple place la caméra en dessous du cube. Pour cela il suffit
+   d'effectué une translation de la caméra sur l'axe z. Ce qui nous donne la matrice
+   extrinsèque 
+    $\begin{pmatrix}
+      0\\
+      0\\
+      5
+      \end{pmatrix}$
+   \item E2 : Dans cette exemple la caméra se positionne à 5m sur la diagonale principale.
+   La caméra regarde donc un des coins supérieur du cube. Pour cela il faut que la caméra 
+   fasse une rotation sur y de 45° pour que la caméra regarde une des arêtes du cube. Puis,
+   il faut faire une rotation de ...%TODO effectué le calcul de l'angle
+   sur l'axe z. Et enfin, effectué une translation de 5m sur la caméra sur l'axe x.
+   %TODO noté la matrice résultante
+  \end{itemize}
+  
   \section{Matrice intrinsèque}
+  
+  Nous allons maintenant calculer la matrice intrinsèque qui dépend de paramètres propre à la caméra comme
+  sa distance focale, les facteurs d'agrandissement de l'image... 
   \section{Projection et affichage des objets}
   
   

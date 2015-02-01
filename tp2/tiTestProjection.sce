@@ -4,6 +4,7 @@ clear;
 exec ('tiProjection.sci');
 // Definition d'un cube de cote unite, sommets et aretes
 [pCube, sCube] = tiCube (1);
+//[pGrille, sGrille] = tiGrille (3, 3, 1);
 //disp(pCube);
 //disp(sCube);
 
@@ -22,9 +23,11 @@ M = [ -360      0    80    400;
          0      0   0.2      1];
 // Projection des sommets du cube
 p = M * pCube;
+//p = M * pGrille
 disp(p);
 // Passage en coordonnees cartesiennes
 p = [p(1,:) ./ p(3,:); p(2,:) ./ p(3,:)];
 disp(p);
 // Affichage dans la figure 1
 tiAfficheObjet2D (1, [600, 800], p, sCube);
+//tiAfficheObjet2D (1, [600, 800], p, sGrille);
