@@ -34,5 +34,5 @@ disp(p);
 p = [p(1,:) ./ p(3,:); p(2,:) ./ p(3,:)];
 disp(p);
 // Affichage dans la figure 1
-//tiAfficheObjet2D (1, [600, 800], p, sCube);
+tiAfficheObjet2D (1, [600, 800], p, sCube);
 //tiAfficheObjet2D (1, [600, 800], p, sGrille);

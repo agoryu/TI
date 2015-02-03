@@ -131,3 +131,14 @@ endfunction
 function [matRepere] = ChangeRepere(sx, sy, ox, oy)
     matRepere = [1/sx 0 ox; 0 1/sy oy; 0 0 1];
 endfunction
+
+// @param width     Taille du capteur en mm sur l'axe x
+// @param height    Taille du capteur en mm sur l'axe y
+// @param col       Nombre de pixel sur l'axe x
+// @param raw       Nombre de pixel sur l'axe y
+function [matIntr] = Intrinseques(width, height, col, raw)
+    // facteur d'échelle pixel/m
+    
+    //matIntr
+endfunction
+

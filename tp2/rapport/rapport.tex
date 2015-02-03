@@ -157,6 +157,15 @@
   gardons pas la forme d'un carré. Lorsque nous modifions les valeurs 80 ou 60, la caméra effectue une rotation
   autour du carré. Et si nous modifions les valeurs 400 ou 300, la caméra translate.\\
   
+  % -> Les trois premières colonnes de la matrice M représente la matrice intrinsèque.
+  %    La matrice intrinsèque ne change pas avec le déplacement de la caméra ou de l'objet dans la scéne.
+  %    Quand on change les 3 premières colonnes, ni l'objet, ni la camera ne bouge, c'est les caractéristique 
+  %    (pour les -360), la position (pour 80 et 60), du capteur qui change.
+  %
+  % -> 80 et 60 représente l'origine du capteur
+  %    c'est pas un rotation, en gros la surface reste paralléle a la face du cube, mais il bouge assez pour 
+  %    voir un autre point de vue du cube.
+  
   \begin{figure}[H]
     \center
     \includegraphics[width=5cm]{ProjectionTaille.png}
@@ -170,11 +179,14 @@
   excepté la rotation. Etant donné que cette forme n'est pas 3D, il n'existe pas 
   de segment reliant deux points de coordonnées différentes dans l'axe \textit{x} et donc aucune
   modification de distance entre deux points n'est possible sur cette axe.
+  
+  % La rotation n'a pas d'effet car ce n'est pas un rotation comme dit dans le commentaire plus haut.
+  % Avec un vrai rotation de la camera la grille drevrait apparaitre déformé par la perceptif (point de fuite).
 
   \section{Matrice extrinsèque}
   
   Nous allons maintenant chercher à calculer la matrice extrinsèque. Cette matrice prend en compte
-  des paramètres qui dépendent de la position de la caméra dans l'espace de travail, comme la rotation
+  des paramètres qui dépendent de la position de la caméra dans l'espace de travail, comme la rotation % position de la camera dans l'environement*
   ou la translation effectué par la caméra. Pour calculer cette matrice, nous l'avons décomposé en 
   plusieurs sous matrice que nous devrons multiplier. Voici les matrices composant la matrice extrinsèque :\\
   
@@ -220,6 +232,8 @@
       \end{pmatrix}$
   \end{center}
 
+  % ok
+  
   Nous avons ensuite calculer les matrices extrinsèques de deux exemples du TP.\\
   
   %TODO y'a un prob dans le sujet il dise que la matrice final est de dimension 4x4
@@ -243,6 +257,8 @@
       -2.2 
       \end{pmatrix}$.
   \end{itemize}
+  
+  % TODO avoir si les résultat actuel fonctionne toujours à la fin du TP
   
   \section{Matrice intrinsèque}
   
