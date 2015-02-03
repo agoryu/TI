@@ -98,35 +98,36 @@ endfunction
 
 function [matRX] = RotationX (theta)
     matRX = [1 0 0; 0 cos(theta) (-sin(theta)); 0 sin(theta) cos(theta)];
+    //matRX = [1 0 0 0; 0 cos(theta) (-sin(theta)) 0; 0 sin(theta) cos(theta) 0; 0 0 0 1];
 endfunction
 
 
 function [matRY] = RotationY (theta)
     matRY = [cos(theta) 0 sin(theta); 0 1 0; (-sin(theta)) 0 cos(theta)];
+    //matRY = [cos(theta) 0 sin(theta) 0; 0 1 0 0; (-sin(theta)) 0 cos(theta) 0; 0 0 0 1];
 endfunction
 
 
 function [matRZ] = RotationZ (theta)
     matRZ = [cos(theta) (-sin(theta)) 0; sin(theta) cos(theta) 0; 0 0 1];
+    //matRZ = [cos(theta) (-sin(theta)) 0 0; sin(theta) cos(theta) 0 0; 0 0 1 0; 0 0 0 1];
 endfunction
 
 
 function [matT] = Translation(x,y,z)
     matT = [x; y; z];
+    //matT = [0 0 0 x; 0 0 0 y; 0 0 0 z; 0 0 0 1]
 endfunction
-
 
 function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
     matExtr = matRX * matRY * matRZ * matT;
 endfunction
 
 
-function [matProj] = Projection(matExtr, focal)
-    matTmp = [focal 0 0; 0 focal 0; 0 0 1];
-    matProj = matTmp*matExtr;
+function [matProj] = Projection(focal)
+    matProj = [focal 0 0; 0 focal 0; 0 0 1];
 endfunction
 
-function [matIntr] = Projection(matProj, sx, sy, ox, oy)
-    matTmp = [1/sx 0 ox; 0 1/sy oy; 0 0 1];
-    matIntr = matTmp*matProj;
+function [matRepere] = ChangeRepere(sx, sy, ox, oy)
+    matRepere = [1/sx 0 ox; 0 1/sy oy; 0 0 1];
 endfunction

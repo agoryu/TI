@@ -131,13 +131,13 @@
   
   \section*{Introduction}
   Lors de ce TP, nous allons voir les différentes étapes permettant de passer d'un
-  modèle 3D à un modèle 2D. Pour cela nous avons besoin de calculer les matrices 
-  extrinsèque et intrinsèque qui vont nous aider à déterminer les coordonnées des points
-  d'une image 3D dans sa représentation 2D.
+  modèle 3D à sa projection bidimentionnelle. Pour cela nous avons besoin de calculer les matrices 
+  extrinsèque et intrinsèque qui vont nous permettre de déterminer les coordonnées des points
+  sur un plan 2D, d'un objet 3D au départ.
   
   \section{Modèles d'objets 3D et affichage 2D}
   Dans un premier temps nous allons faire varier les paramètres présent dans l'exemple fournit
-  dans le cadre de ce TP afin d'observer la réaction de l'objet.\\
+  dans le cadre de ce TP, afin d'observer la variation des coordonnées des points de la projection de l'objet.\\
   
   \begin{figure}[H]
     \center
@@ -153,8 +153,9 @@
    0 & 0 & 0.2 & 1
   \end{pmatrix}$
   Nous avons constater que si nous modifions les valeurs -360, nous interagissions sur la largeur
-  et la hauteur du carré. Lorsque nous modifions les valeurs 80 ou 60, la caméra fesait une rotation
-  autour du carré. Et si nous modifions les valeurs 400 ou 300, la caméra translatait.\\
+  et la hauteur du carré. Si nous ne gardons pas la même valeur sur ces deux valeurs, nous ne 
+  gardons pas la forme d'un carré. Lorsque nous modifions les valeurs 80 ou 60, la caméra effectue une rotation
+  autour du carré. Et si nous modifions les valeurs 400 ou 300, la caméra translate.\\
   
   \begin{figure}[H]
     \center
@@ -165,9 +166,9 @@
   \end{figure}
   
   Nous avons ensuite modifié ces paramètres sur une grille 2D. Nous remarquons que 
-  les transformations cités précédemment sont également valide pour cette forme 
+  les transformations citées précédemment sont également valides pour cette forme 
   excepté la rotation. Etant donné que cette forme n'est pas 3D, il n'existe pas 
-  de segment reliant deux points de coordonnées différentes dans l'axe x et donc aucune
+  de segment reliant deux points de coordonnées différentes dans l'axe \textit{x} et donc aucune
   modification de distance entre deux points n'est possible sur cette axe.
 
   \section{Matrice extrinsèque}
@@ -219,22 +220,28 @@
       \end{pmatrix}$
   \end{center}
 
-  Nous avons ensuite calculer les matrices extrinsèques de deux exemples du TP.
+  Nous avons ensuite calculer les matrices extrinsèques de deux exemples du TP.\\
+  
+  %TODO y'a un prob dans le sujet il dise que la matrice final est de dimension 4x4
   \begin{itemize}
    \item E1 : Cette exemple place la caméra en dessous du cube. Pour cela il suffit
-   d'effectué une translation de la caméra sur l'axe z. Ce qui nous donne la matrice
+   d'effectué une translation de la caméra sur l'axe \textit{z}. Ce qui nous donne la matrice
    extrinsèque 
     $\begin{pmatrix}
       0\\
       0\\
       5
-      \end{pmatrix}$
+      \end{pmatrix}$.
    \item E2 : Dans cette exemple la caméra se positionne à 5m sur la diagonale principale.
    La caméra regarde donc un des coins supérieur du cube. Pour cela il faut que la caméra 
-   fasse une rotation sur y de 45\degre pour que la caméra regarde une des arêtes du cube. Puis,
-   il faut faire une rotation de ...%TODO effectué le calcul de l'angle
-   sur l'axe z. Et enfin, effectué une translation de 5m sur la caméra sur l'axe x.
-   %TODO noté la matrice résultante
+   fasse une rotation sur \textit{y} de 45\degre pour que la caméra regarde une des arêtes du cube. Puis,
+   il faut faire une rotation de 45\degre sur l'axe \textit{z} pour se positionner dans le coin du cube. 
+   Et enfin, effectué une translation de 5m sur la caméra sur l'axe \textit{x}. Le résultat donne la matrice
+   $\begin{pmatrix}
+      1.3\\
+      4.2\\
+      -2.2 
+      \end{pmatrix}$.
   \end{itemize}
   
   \section{Matrice intrinsèque}

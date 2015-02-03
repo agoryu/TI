@@ -9,12 +9,17 @@ exec ('tiProjection.sci');
 //disp(sCube);
 
 E1 = RotationX(0)*RotationY(0)*RotationZ(0)*Translation(0,0,-5);
-theta = %pi /4;
-E2 = RotationX(theta)*RotationY(theta)*RotationZ(0)*Translation(5,0,0);
+//theta = %pi /4;
+theta = 45
+E2 = RotationX(theta) * RotationY(0) * RotationZ(theta) * Translation(0,5,0);
 
+//disp(E2);
 
+sx = 600/0.0066;
+sy = 800/0.0063;
 
-disp(E2);
+I1 = Projection(20) * ChangeRepere(sx, sy, 0, 0) * E2;
+disp(I1);
 
 // Matrice de projection 3D -> 2D
 //  scaleX scaleY camRot camPos
@@ -29,5 +34,5 @@ disp(p);
 p = [p(1,:) ./ p(3,:); p(2,:) ./ p(3,:)];
 disp(p);
 // Affichage dans la figure 1
-tiAfficheObjet2D (1, [600, 800], p, sCube);
+//tiAfficheObjet2D (1, [600, 800], p, sCube);
 //tiAfficheObjet2D (1, [600, 800], p, sGrille);
