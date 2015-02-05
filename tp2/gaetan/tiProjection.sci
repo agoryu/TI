@@ -129,8 +129,8 @@ endfunction
 
 
 function [matIntr] = Intrinseques(pixX, pixY, sizeX, sizeY)
-    sx = pixX/sizeX;
-    sy = pixY/sizeY;
+    sx = pixX/sizeX;// pixel par millimètre
+    sy = pixY/sizeY;// pixel par millimètre
     ox = pixX/2;
     oy = pixY/2;
     matIntr = [sx 0 ox;0 sy oy;0 0 1];

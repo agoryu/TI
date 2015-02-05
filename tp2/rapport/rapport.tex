@@ -176,35 +176,44 @@
   
   \begin{itemize}
    \item matrice de rotation x : 
-   $\begin{pmatrix}
-     1 & 0 & 0\\
-     0 & cos(theta) & -sin(theta)\\
-     0 & sin(theta) & cos(theta)
+    $\begin{pmatrix}
+      1 & 0 & 0\\
+      0 & cos(theta) & -sin(theta)\\
+      0 & sin(theta) & cos(theta)
     \end{pmatrix}$
-    
-   \item matrice de rotation y : 
-   $\begin{pmatrix}
-     cos(theta) & 0 & sin(theta)\\
-     0 & 1 & 0\\
-     -sin(theta) & 0 & cos(theta)
+      
+    \item matrice de rotation y : 
+      $\begin{pmatrix}
+	cos(theta) & 0 & sin(theta)\\
+	0 & 1 & 0\\
+	-sin(theta) & 0 & cos(theta)
+      \end{pmatrix}$
+	
+    \item matrice de rotation z : 
+      $\begin{pmatrix}
+	cos(theta) & -sin(theta) & 0\\
+	sin(theta) & cos(theta) & 0\\
+	0 & 0 & 1
+      \end{pmatrix}$
+	
+    \item matrice de translation : 
+      $\begin{pmatrix}
+	x\\
+	y\\
+	z
     \end{pmatrix}$
-    
-   \item matrice de rotation z : 
-   $\begin{pmatrix}
-     cos(theta) & -sin(theta) & 0\\
-     sin(theta) & cos(theta) & 0\\
-     0 & 0 & 1
-    \end{pmatrix}$
-    
-   \item matrice de translation : 
-   $\begin{pmatrix}
-     x\\
-     y\\
-     z
-    \end{pmatrix}$
-
   \end{itemize}
-  
+  \ \\
+  La fonction suivante donne le calcul de la matrice de rotation x :
+  \begin{lstlisting}[caption=Fonction qui calcule la rotation sur X]
+    function [matRX] = RotationX (theta)
+        matRX = [1 0 0 0; 
+                 0 cos(theta) (-sin(theta)) 0; 
+                 0 sin(theta) cos(theta) 0; 
+                 0 0 0 1];
+    endfunction
+  \end{lstlisting}
+
   Une fois ces matrices définies, nous les multiplions afin d'obtenir la matrice
   extrinsèque qui a la forme suivante :\\
   \begin{center}
@@ -216,6 +225,14 @@
       \end{pmatrix}$
   \end{center}
   
+  Voici la fonction qui détermine la matrice extrinsèque dans Scilab :
+  \begin{lstlisting}[caption=Fonction qui calcule la matrice extrinsèque]
+    function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
+        matExtr = matRX * matRY * matRZ * matT;
+    endfunction
+  \end{lstlisting}
+  
+  \subsection*{Application sur les exemples}
   Nous avons ensuite calculé les matrices extrinsèques de deux exemples du TP.\\
   
   \begin{itemize}
@@ -266,6 +283,23 @@
   Lorsque nous avons modifié les valeurs -360, nous modifions en fait la taille, et aussi la forme
   des pixels, car nous changions le résultat de f/$s_x$ et donc le nombre de pixel/mm se trouvait modifié.\\
   
+  Voici les fonctions liées aux calculs de la matrice intrinsèque de la caméra:
+  \begin{lstlisting}[caption=Fonctions propres aux calculs de la matrice intrinsèque]
+function [matIntr] = Capteur(pixX, pixY, sizeX, sizeY)
+    sx = pixX/sizeX;// pixel par millimètre
+    sy = pixY/sizeY;// pixel par millimètre
+    ox = pixX/2;
+    oy = pixY/2;
+    matIntr = [sx 0 ox;0 sy oy;0 0 1];
+endfunction
+
+function [matPers] = Perspective(focal)
+    matPers = [focal 0 0; 0 focal 0; 0 0 1];
+endfunction
+function [matProj] = Projection(focal, sx, sy, ox, oy)
+    matProj = [focal/sx 0 ox 0; 0 focal/sy oy 0; 0 0 1 0];
+endfunction\end{lstlisting}
+  
   Une fois, la matrice intrinsèque formée, nous la divisons par la coordonnée \textit{z},
   ce qui nous donnera une matrice à deux dimensions, la troisième valant 1 elle ne sera
   plus utilisée.
@@ -275,7 +309,10 @@
   
   \section*{Conclusion}
   Nous avons pu voir grâce à ce TP, qu'il est possible de passer d'un repère trois dimensions à un repère deux
-  dimensions grâce à un ensemble de paramètres réunis dans deux matrices.
+  dimensions grâce à un ensemble d'opérations matricielles réuni dans deux matrices. La matrice extrinsèque
+  qui dépend du déplacement de la caméra dans l'environnement et la matrice intrinsèque qui change en fonction 
+  des caractéristiques propres à la caméra. Ces matrices nous permettent donc d'obtenir la projection 2D 
+  d'une scène 3D.
     
 \end{document}
 
