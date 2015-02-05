@@ -13,13 +13,14 @@ E1 = RotationX(0)*RotationY(0)*RotationZ(0)*Translation(0,0,-5);
 theta = 45
 E2 = RotationX(theta) * RotationY(0) * RotationZ(theta) * Translation(0,5,0);
 
-//disp(E2);
+disp(E2);
 
-sx = 600/0.0066;
-sy = 800/0.0063;
+sx = 600/6.6;
+sy = 800/6.3;
 
-I1 = Projection(20) * ChangeRepere(sx, sy, 0, 0) * E2;
-disp(I1);
+I1 = Projection(20) * ChangeRepere(sx, sy, 0, 0);
+//disp(ChangeRepere(sx, sy, 0, 0))
+//disp(I1);
 
 // Matrice de projection 3D -> 2D
 //  scaleX scaleY camRot camPos

@@ -152,43 +152,31 @@
    0 & -360 & 60 & 300 \\
    0 & 0 & 0.2 & 1
   \end{pmatrix}$
-  Nous avons constater que si nous modifions les valeurs -360, nous interagissions sur la largeur
-  et la hauteur du carré. Si nous ne gardons pas la même valeur sur ces deux valeurs, nous ne 
-  gardons pas la forme d'un carré. Lorsque nous modifions les valeurs 80 ou 60, la caméra effectue une rotation
-  autour du carré. Et si nous modifions les valeurs 400 ou 300, la caméra translate.\\
-  
-  % -> Les trois premières colonnes de la matrice M représente la matrice intrinsèque.
-  %    La matrice intrinsèque ne change pas avec le déplacement de la caméra ou de l'objet dans la scéne.
-  %    Quand on change les 3 premières colonnes, ni l'objet, ni la camera ne bouge, c'est les caractéristique 
-  %    (pour les -360), la position (pour 80 et 60), du capteur qui change.
-  %
-  % -> 80 et 60 représente l'origine du capteur
-  %    c'est pas un rotation, en gros la surface reste paralléle a la face du cube, mais il bouge assez pour 
-  %    voir un autre point de vue du cube.
+  Nous avons constater que si nous modifions les valeurs -360, la largeur et la hauteur de la représentation du cube sont
+  modifiés. 
+  Lorsque nous modifions les valeurs 80 ou 60, on remarque que le point de vue du capteur est légèrement décalé, car nous 
+  pouvons voir une des faces latéral sur l'image résultante.
+  Et si nous modifions les valeurs 400 ou 300, nous observons que c'est l'objet qui translate.\\
   
   \begin{figure}[H]
     \center
     \includegraphics[width=5cm]{ProjectionTaille.png}
     \includegraphics[width=5cm]{ProjectionRotation.png}
     \includegraphics[width=5cm]{ProjectionTranslation.png}
-    \caption{Image du cube avec modification des valeur de la matrice de projection}
+    \caption{Image du cube avec différentes modifiction sur la matrice de projection}
   \end{figure}
   
   Nous avons ensuite modifié ces paramètres sur une grille 2D. Nous remarquons que 
-  les transformations citées précédemment sont également valides pour cette forme 
-  excepté la rotation. Etant donné que cette forme n'est pas 3D, il n'existe pas 
-  de segment reliant deux points de coordonnées différentes dans l'axe \textit{x} et donc aucune
-  modification de distance entre deux points n'est possible sur cette axe.
+  les modifications apportés à la matrice de projection ont le même effet pour cette forme. 
+  Cependant, la translation du capteur ne modifit pas l'image, car cette forme n'a pas de profondeur
+  et donc aucune autre face n'est affichable.
   
-  % La rotation n'a pas d'effet car ce n'est pas un rotation comme dit dans le commentaire plus haut.
-  % Avec un vrai rotation de la camera la grille drevrait apparaitre déformé par la perceptif (point de fuite).
-
   \section{Matrice extrinsèque}
   
   Nous allons maintenant chercher à calculer la matrice extrinsèque. Cette matrice prend en compte
-  des paramètres qui dépendent de la position de la caméra dans l'espace de travail, comme la rotation % position de la camera dans l'environement*
+  des paramètres qui dépendent de la position de la caméra dans l'environement, comme la rotation 
   ou la translation effectué par la caméra. Pour calculer cette matrice, nous l'avons décomposé en 
-  plusieurs sous matrice que nous devrons multiplier. Voici les matrices composant la matrice extrinsèque :\\
+  plusieurs sous matrices que nous devrons multiplier. Voici les matrices composant la matrice extrinsèque :\\
   
   \begin{itemize}
    \item matrice de rotation x : 
@@ -239,8 +227,9 @@
   %TODO y'a un prob dans le sujet il dise que la matrice final est de dimension 4x4
   \begin{itemize}
    \item E1 : Cette exemple place la caméra en dessous du cube. Pour cela il suffit
-   d'effectué une translation de la caméra sur l'axe \textit{z}. Ce qui nous donne la matrice
-   extrinsèque 
+   d'effectué une translation de la caméra sur l'axe \textit{z}. 
+   %TODO voir si la formulation est bonne
+   Ce qui nous donne le résultat de la matrice extrinsèque suivant 
     $\begin{pmatrix}
       0\\
       0\\
@@ -263,7 +252,36 @@
   \section{Matrice intrinsèque}
   
   Nous allons maintenant calculer la matrice intrinsèque qui dépend de paramètres propre à la caméra comme
-  sa distance focale, les facteurs d'agrandissement de l'image... 
+  sa distance focale, les facteurs d'agrandissement de l'image... Pour cela nous devons d'abord passer par
+  une matrice de projection, puis de changement de repère. Nous allons calculer ces matrices à partir des 
+  données fourni dans le TP.\\
+  
+  matrice de projection : 
+   $\begin{pmatrix}
+     f & 0 & 0\\  
+     0 & f & 0\\  
+     0 & 0 & 1 
+     \end{pmatrix}$ = 
+   $\begin{pmatrix}
+     20 & 0 & 0\\  
+     0 & 20 & 0\\  
+     0 & 0 & 1 
+     \end{pmatrix}$\\
+     
+  matrice de changement de repère : 
+   $\begin{pmatrix}
+     1/s_x & 0 & 0\\  
+     0 & 1/s_y & 0\\  
+     0 & 0 & 1 
+     \end{pmatrix}$ = 
+   $\begin{pmatrix}
+     0.011 & 0 & 0\\  
+     0 & 0.007875 & 0\\  
+     0 & 0 & 1 
+     \end{pmatrix}$\\
+     
+  A partir de ces deux matrices, nous pouvons calculer la matrice intrinsèque en les multipliants. 
+     
   \section{Projection et affichage des objets}
   
   
