@@ -141,6 +141,12 @@ function [matPers] = Perspective(focal)
     matPers = [focal 0 0; 0 focal 0; 0 0 1];
 endfunction
 
+
+function [matProj] = Projection(focal, sx, sy, ox, oy)
+    matProj = [focal/sx 0 ox 0; 0 focal/sy oy 0; 0 0 1 0];
+endfunction
+
+
 function [matP] = Perspectiveto4x3(matPers)
     col = [0;0;0];
     matP = cat(2,matPers,col);
