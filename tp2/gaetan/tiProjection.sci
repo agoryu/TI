@@ -55,10 +55,10 @@ endfunction
 // -----------------------------------------------------------------------
 function [points, segments] = tiCube (cote)
     // Definition des coordonnees des points, cube de cote 2
-    points = [ ...
-    -1  1  1 -1 -1  1  1 -1; ...
-    -1 -1  1  1 -1 -1  1  1; ...
-    -1 -1 -1 -1  1  1  1  1; ...
+    points = [ 
+    -1  1  1 -1 -1  1  1 -1; 
+    -1 -1  1  1 -1 -1  1  1; 
+    -1 -1 -1 -1  1  1  1  1; 
     1  1  1  1  1  1  1  1];
     // Changement des cotes -> coefficient cote/2 sur les 3 coordonnees
     points = points .* ([cote/2; cote/2; cote/2; 1] * ones (1, 8));
@@ -95,5 +95,54 @@ function [points, segments] = tiGrille (nx, ny, cote)
     segments = [debutx, debuty; finx, finy];
 endfunction
 
-function [matrixH] = RotationX (theta)
-    
+
+function [matRX] = RotationX (theta)
+    matRX = [1 0 0; 0 cos(theta) (-sin(theta)); 0 sin(theta) cos(theta)];
+    //matRX = [1 0 0 0; 0 cos(theta) (-sin(theta)) 0; 0 sin(theta) cos(theta) 0; 0 0 0 1];
+endfunction
+
+
+function [matRY] = RotationY (theta)
+    matRY = [cos(theta) 0 sin(theta); 0 1 0; (-sin(theta)) 0 cos(theta)];
+    //matRY = [cos(theta) 0 sin(theta) 0; 0 1 0 0; (-sin(theta)) 0 cos(theta) 0; 0 0 0 1];
+endfunction
+
+
+function [matRZ] = RotationZ (theta)
+    matRZ = [cos(theta) (-sin(theta)) 0; sin(theta) cos(theta) 0; 0 0 1];
+    //matRZ = [cos(theta) (-sin(theta)) 0 0; sin(theta) cos(theta) 0 0; 0 0 1 0; 0 0 0 1];
+endfunction
+
+
+function [matT] = Translation(x,y,z)
+    matT = [x; y; z];
+    //matT = [x; y; z; 1]
+endfunction
+
+
+function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
+    matR = matRX * matRY * matRZ;
+    matRT = cat(2, matR, matT);
+    matRaw4 = [0 0 0 1];
+    matExtr = cat(1, matRT, matRaw4);
+endfunction
+
+
+function [matIntr] = Intrinseques(pixX, pixY, sizeX, sizeY)
+    sx = pixX/sizeX;
+    sy = pixY/sizeY;
+    ox = pixX/2;
+    oy = pixY/2;
+    matIntr = [sx 0 ox;0 sy oy;0 0 1];
+endfunction
+
+
+function [matPers] = Perspective(focal)
+    matPers = [focal 0 0; 0 focal 0; 0 0 1];
+endfunction
+
+function [matP] = Perspectiveto4x3(matPers)
+    col = [0;0;0];
+    matP = cat(2,matPers,col);
+endfunction
+
