@@ -97,34 +97,34 @@ endfunction
 
 
 function [matRX] = RotationX (theta)
-    matRX = [1 0 0; 0 cos(theta) (-sin(theta)); 0 sin(theta) cos(theta)];
-    //matRX = [1 0 0 0; 0 cos(theta) (-sin(theta)) 0; 0 sin(theta) cos(theta) 0; 0 0 0 1];
+    //matRX = [1 0 0 ; 0 cos(theta) (-sin(theta)); 0 sin(theta) cos(theta)];
+    matRX = [1 0 0 0; 0 cos(theta) (-sin(theta)) 0; 0 sin(theta) cos(theta) 0; 0 0 0 1];
 endfunction
 
 
 function [matRY] = RotationY (theta)
-    matRY = [cos(theta) 0 sin(theta); 0 1 0; (-sin(theta)) 0 cos(theta)];
-    //matRY = [cos(theta) 0 sin(theta) 0; 0 1 0 0; (-sin(theta)) 0 cos(theta) 0; 0 0 0 1];
+    //matRY = [cos(theta) 0 sin(theta); 0 1 0; (-sin(theta)) 0 cos(theta)];
+    matRY = [cos(theta) 0 sin(theta) 0; 0 1 0 0; (-sin(theta)) 0 cos(theta) 0; 0 0 0 1];
 endfunction
 
 
 function [matRZ] = RotationZ (theta)
-    matRZ = [cos(theta) (-sin(theta)) 0; sin(theta) cos(theta) 0; 0 0 1];
-    //matRZ = [cos(theta) (-sin(theta)) 0 0; sin(theta) cos(theta) 0 0; 0 0 1 0; 0 0 0 1];
+    //matRZ = [cos(theta) (-sin(theta)) 0; sin(theta) cos(theta) 0; 0 0 1];
+    matRZ = [cos(theta) (-sin(theta)) 0 0; sin(theta) cos(theta) 0 0; 0 0 1 0; 0 0 0 1];
 endfunction
 
 
 function [matT] = Translation(x,y,z)
-    matT = [x; y; z];
+    matT = [1 0 0 x; 0 1 0 y; 0 0 1 z; 0 0 0 1];
     //matT = [x; y; z; 1]
 endfunction
 
 
 function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
-    matR = matRX * matRY * matRZ;
-    matRT = cat(2, matR, matT);
-    matRaw4 = [0 0 0 1];
-    matExtr = cat(1, matRT, matRaw4);
+    matExtr = matRX * matRY * matRZ * matT;
+    //matRT = cat(2, matR, matT);
+    //matRaw4 = [0 0 0 1];
+    //matExtr = cat(1, matRT, matRaw4);
 endfunction
 
 
