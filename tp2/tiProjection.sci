@@ -98,25 +98,37 @@ endfunction
 
 function [matRX] = RotationX (theta)
     //matRX = [1 0 0; 0 cos(theta) (-sin(theta)); 0 sin(theta) cos(theta)];
-    matRX = [1 0 0 0; 0 cos(theta) (-sin(theta)) 0; 0 sin(theta) cos(theta) 0; 0 0 0 1];
+    matRX = [1 0 0 0; 
+            0 cos(theta) (-sin(theta)) 0; 
+            0 sin(theta) cos(theta) 0;
+            0 0 0 1];
 endfunction
 
 
 function [matRY] = RotationY (theta)
     //matRY = [cos(theta) 0 sin(theta); 0 1 0; (-sin(theta)) 0 cos(theta)];
-    matRY = [cos(theta) 0 sin(theta) 0; 0 1 0 0; (-sin(theta)) 0 cos(theta) 0; 0 0 0 1];
+    matRY = [cos(theta) 0 sin(theta) 0; 
+            0 1 0 0; 
+            (-sin(theta)) 0 cos(theta) 0;
+            0 0 0 1];
 endfunction
 
 
 function [matRZ] = RotationZ (theta)
     //matRZ = [cos(theta) (-sin(theta)) 0; sin(theta) cos(theta) 0; 0 0 1];
-    matRZ = [cos(theta) (-sin(theta)) 0 0; sin(theta) cos(theta) 0 0; 0 0 1 0; 0 0 0 1];
+    matRZ = [cos(theta) (-sin(theta)) 0 0; 
+            sin(theta) cos(theta) 0 0; 
+            0 0 1 0
+            0 0 0 1];
 endfunction
 
 
 function [matT] = Translation(x,y,z)
     //matT = [x; y; z];
-    matT = [x; y; z; 1]
+    matT = [1 0 0 x; 
+            0 1 0 y; 
+            0 0 1 z; 
+            0 0 0 1]
 endfunction
 
 function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
@@ -124,13 +136,13 @@ function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
 endfunction
 
 
-function [matProj] = Projection(focal)
-    matProj = [focal 0 0; 0 focal 0; 0 0 1];
+function [matProj] = Projection(focal, sx, sy, ox, oy)
+    matProj = [focal/sx 0 ox 0; 0 focal/sy oy 0; 0 0 1 0];
 endfunction
 
-function [matRepere] = ChangeRepere(sx, sy, ox, oy)
-    matRepere = [1/sx 0 ox; 0 1/sy oy; 0 0 1];
-endfunction
+//function [matRepere] = ChangeRepere()
+//    matRepere = [1/sx 0 ox; 0 1/sy oy; 0 0 1];
+//endfunction
 
 // @param width     Taille du capteur en mm sur l'axe x
 // @param height    Taille du capteur en mm sur l'axe y
