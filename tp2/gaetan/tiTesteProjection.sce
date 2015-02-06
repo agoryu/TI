@@ -19,6 +19,7 @@ matRZ = RotationZ(theta);
 matT = Translation(0,0,5);
 matExt = Extrinseques(matRX, matRY, matRZ, matT);
 matProj = Projection(20, 600/6.6, 800/8.8, 600/2, 800/2);
+disp(matProj);
 //matProj = Projection(20, 600/6.6, 800/8.8, 800/2, 600/2)
 
 M = matProj * matExt;

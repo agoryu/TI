@@ -121,7 +121,7 @@ endfunction
 
 
 function [matExtr] = Extrinseques(matRX, matRY, matRZ, matT)
-    matExtr = matRX * matRY * matRZ * matT;
+    matExtr = matT * matRX * matRY * matRZ;
     //matRT = cat(2, matR, matT);
     //matRaw4 = [0 0 0 1];
     //matExtr = cat(1, matRT, matRaw4);
