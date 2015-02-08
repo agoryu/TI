@@ -188,8 +188,39 @@
   pour un canal. Ensuite, il suffit de créer un pixel au centre de ce groupe avec comme valeur la moyenne précédement calculer.
   Pour déterminer les groupes de pixel, il faut diviser le nombre de pixel sur une ligne par N et faire pareil sur une colonne.
   Ainsi les pixels ajouté auront une distance régulière avec une valeur moyenne.\\
+  
+  \begin{lstlisting}[caption=Fonction permettant le sur-échantillonnement d'une image]
+    function [newImg] = surEchant(img,n)
+        s = size(img);
+        newLenX = s(1)/n;
+        newLenY = s(2)/n;
+        newImg = zeros(newLenX,newLenY);
+        for raw=1:newLenY
+            for col=1:newLenX
+                for c=1:s(3)
+                    if modulo(n,2) == 0 then
+                        tabMoyenne = [img(col+1,raw,c) img(col-1,raw,c) img(col,raw+1,c) img(col,raw-1,c)]
+                        newImg(col,raw,c) = mean(tabMoyenne);    
+                    else
+                        newImg(col,raw,c) = img(col-((n-1)*col),raw-((n-1)*raw),c);
+                    end;
+                end;
+            end;
+        end;
+    endfunction;
+  \end{lstlisting}
+  
+  \subsection{Cumulation d'échantillonage}
+  %TODO faire les tests
+  
   \section{Quantification}
+  La quantification permet de déterminer le nombre de bit qui vont codé une composante. Cette variation
+  va influencer le nombre de couleur qui seront présente dans l'image car si le nombre de bit qui code
+  une composante diminu alors le nombre de valeur disponible pour cette composante diminu également.
+  
+  %TODO verif algo et test sur image
   \section{Repliement de spectre}
+  %question 1 pixel/m -> resPeriode / 150
   
   \section*{Conclusion}
  

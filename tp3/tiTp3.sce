@@ -26,6 +26,8 @@ img = imread(img_name);
 //img_blue(:,:,1) = zeros(img_blue(:,:,1));
 //img_blue(:,:,2) = zeros(img_blue(:,:,2));
 
-sousEch = sousEchant(img,4);
+//sousEch = sousEchant(img,4);
+//surEch = surEchant(img, 2);
+periode = calcPeriode(im, 0, 255);
 
 imshow(sousEch);
