@@ -140,23 +140,54 @@
   et de l'afficher seul. Nous avons ainsi une matrice avec les valeurs de rouge et vu que nous ne gardons qu'une matrice,
   l'image se transforme en dégradé de gris.\\
   
-  %TODO ajouter l'image avec les 3 images de gris
+  \begin{figure}[H]
+    \center
+    \includegraphics[width=10cm]{../mire_gris.png}
+    \caption{Image en niveau de gris}
+  \end{figure}
   
   La récupération d'une image dans un dégradé d'une seul couleur, il faut annuler les deux autres canaux en les multipliant par
   zéro.
   
-  %TODO ajouter l'image avec les 3 images de couleur différente
+  \begin{figure}[H]
+    \center
+    \includegraphics[width=10cm]{../mire_couleur.png}
+    \caption{Image avec suppression de deux composantes de couleur}
+  \end{figure}
+  
   \section{Sur et sous-échantillonnage}
-  %a revoir
+  Nous allons, avant de définir les notions de sur et sous-échantillonage, calculer les dimensions du support
+  initial de l'image en prenant comme résolution d'acquisition 72 pixel/pouce. Ce calcul correspond à :
+  <nb pixels sur x> / 72 et <nb pixels sur y> /72. Ce qui nous donne un support de 11x8 pouces.
+  
   %800/72 = 11
   %600/72 = 8
   \subsection{Sous-échantillonage}
-  Pour effectuer un sous-échantillonage, il faut supprimer une valeur sur N dans le vecteur de chaque canaux.
-  Pour cela on récupère un vecteur avec l'ensemble des pixels de l'image, on supprime le nombre de pixel nécessaire
+  Pour effectuer un sous-échantillonage, il faut supprimer un pixel tout les N pixels dans le vecteur de chaque canaux.
+  Pour cela on récupère un vecteur avec l'ensemble des pixels de l'image, on en supprime le nombre nécessaire
   et on reforme la matrice de l'image.\\
+
+  \begin{lstlisting}[caption=Fonction permettant le sous-échantillonnement d'une image]
+    function [newImg] = sousEchant(img,n)
+        s = size(img);
+        newLenX = s(1)/n;
+        newLenY = s(2)/n;
+        newImg = zeros(newLenX,newLenY);
+        for raw=1:newLenY
+            for col=1:newLenX
+                for c=1:s(3)
+                    newImg(col,raw,c) = img(col*n,raw*n,c);
+                end;
+            end;
+        end;
+    endfunction;
+  \end{lstlisting}
   
-  %mettre le code de sous-echantillonage avec caption
   \subsection{Sur-échantillonage}
+  L'algorithme de sur-échantillonner d'une image doit prendre un groupe de pixels afin de faire la moyenne de leur valeur
+  pour un canal. Ensuite, il suffit de créer un pixel au centre de ce groupe avec comme valeur la moyenne précédement calculer.
+  Pour déterminer les groupes de pixel, il faut diviser le nombre de pixel sur une ligne par N et faire pareil sur une colonne.
+  Ainsi les pixels ajouté auront une distance régulière avec une valeur moyenne.\\
   \section{Quantification}
   \section{Repliement de spectre}
   
