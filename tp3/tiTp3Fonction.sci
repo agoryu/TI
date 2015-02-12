@@ -14,30 +14,42 @@ endfunction;
 
 function [newImg] = surEchant(img,n)
     s = size(img);
-    newLenX = s(1) * n;
-    newLenY = s(2) * n;
-    newImg = zeros(newLenX,newLenY);
-    for raw=1:newLenY
-        for col=1:newLenX
+    lenX = s(1);
+    lenY = s(2);
+    newImg = zeros(lenX * n,lenY * n, 3);
+    for raw=1:lenY
+        for col=1:lenX
             for c=1:s(3)
-                if modulo(n,2) == 0 then
-                    tabMoyenne = [img(col+1,raw,c) img(col-1,raw,c) img(col,raw+1,c) img(col,raw-1,c)]
-                    newImg(col,raw,c) = mean(tabMoyenne);    
-                else
-                    newImg(col,raw,c) = img(col-((n-1)*col),raw-((n-1)*raw),c);
+                for i=0:(n-1)
+                    for j=0:(n-1)
+                        x = ((col*n)-1) + i;
+                        y = ((raw*n)-1) + j;
+                        newImg(x, y, c)
+                    end;
                 end;
             end;
         end;
     end;
 endfunction;
 
-function [quant] = quantification(img, vmin, vmax)
-    im = im2double(img);
-    quant = im * vmax - vmin;
+function [quant] = quantification(img, m)
+    maxVal = max(img);
+    minVal = min(img);
+    quant = ((maxVal - minVal) / m) / (maxVal - minVal);
 endfunction;
 
+function [newImg] = quantificationImage(img, composante, nbBit)
+    m = 2^nbBit;
+    pas = quantification(im, m);
+    im2double(im);
+    
+    for i=1:m
+        
+    end;     
+endfunction
+
 function [periode] = calcPeriode(img, vmin, vmax)
-    moy = vmax - vmin;
+    moy = vmax - vmin / 2;
     i = find(img(:, 1, 1) == moy);
     periode = size(img(:, 1, 1)) / size(i);
 endfunction;
