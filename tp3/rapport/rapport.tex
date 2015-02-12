@@ -131,8 +131,8 @@
   
   \section*{Introduction}
   Ce TP a pour objectif de détailler la composition d'une image couleur afin de pouvoir 
-  effectuer des traitements de rééchantillonage dessus. Nous allons donc cherche à sur et 
-  sous-échantilloner une image afin de comprendre les limites de ce procédé.
+  effectuer des traitements de rééchantillonnement dessus. Nous allons donc chercher à sur-échantilloner et à 
+  sous-échantillonner une image afin de comprendre les limites de ce procédé.
   
   \section{Composantes d'une image couleur}
   Nous allons d'abord voir comment manipulé les composantes d'une image couleur à partir de l'image de calibrage
@@ -193,43 +193,77 @@
   
   \begin{lstlisting}[caption=Fonction permettant le sur-échantillonnement d'une image]
     function [newImg] = surEchant(img,n)
-        s = size(img);
-        newLenX = s(1)/n;
-        newLenY = s(2)/n;
-        newImg = zeros(newLenX,newLenY);
-        for raw=1:newLenY
-            for col=1:newLenX
-                for c=1:s(3)
-                    if modulo(n,2) == 0 then
-                        tabMoyenne = [img(col+1,raw,c) img(col-1,raw,c) img(col,raw+1,c) img(col,raw-1,c)]
-                        newImg(col,raw,c) = mean(tabMoyenne);    
-                    else
-                        newImg(col,raw,c) = img(col-((n-1)*col),raw-((n-1)*raw),c);
+    s = size(img);
+    lenX = s(1);
+    lenY = s(2);
+    newImg = zeros(lenX * n,lenY * n, 3);
+    for raw=1:lenY
+        for col=1:lenX
+            for c=1:s(3)
+                for i=0:(n-1)
+                    for j=0:(n-1)
+                        x = ((col*n)-(n-1)) + i;
+                        y = ((raw*n)-(n-1)) + j;
+                        newImg(x, y, c)
                     end;
                 end;
             end;
         end;
+    end;
     endfunction;
   \end{lstlisting}
   
   Le problème avec cette algorithme est que l'image va se pixeliser lorsque N va devenir trop grand. Il existe 
-  d'autre algorithme de sur-échantillonage mais contrairement à notre algorithme, l'image résultante sera flouté.
+  d'autre algorithme de sur-échantillonage mais contrairement à notre algorithme, l'image résultante sera légèrement flouté quand N sera grand.
   La majorité des autres algorithme vont calculer la moyenne dans le voisinage du pixel recherché. Cela a pour 
   effet de créer un dégradé de la couleur autour des pixels connu et donne un rendu flouté.
   
-  \subsection{Cumulation d'échantillonage}
+  %\subsection{Cumulation d'échantillonage}
   %TODO faire les tests
   
   \section{Quantification}
-  La quantification permet de déterminer le nombre de bit qui vont codé une composante. Cette variation
-  va influencer le nombre de couleur qui seront présente dans l'image car si le nombre de bit qui code
-  une composante diminu alors le nombre de valeur disponible pour cette composante diminu également.
+  La quantification permet de réduire le nombre de valeur dans un canal afin de minimiser la taille de l'image.\\
+  
+  Pour trouver la valeur de chaque intervalle, nous avons appliqué la formule suivante : $((maxVal - minVal) / m) / (maxVal - minVal)$
+  où m est le nombre d'intervalle souhaité. La valeur de $m$ est égale à $2^{nbBit}$. Par exemple pour 8 bits nous avons 256 
+  niveau de gris, donc 256 intervalles.\\
+  
+  Une fois que nous avons les intervalles, il faut que la valeur de chaque pixel soit égale à la valeur de l'intervalle 
+  inférieur à cette valeur. Cette méthode n'est pas la plus optimale mais elle est la plus simple. On pourrait également 
+  chercher l'intervalle le plus proche d'un pixel et modifier sa valeur pour qu'il soit égale à la valeur de l'intervalle.
+  
+  \newpage
   
   %TODO verif algo et test sur image
   \section{Repliement de spectre}
   %question 1 pixel/m -> resPeriode / 150
+  Nous allons maintenant calculer la fréquence de l'image suivante :
+  \begin{figure}[H]
+    \center
+    \includegraphics[width=10cm]{../ti-semaine-3-sinus.png}
+    \caption{Motif sinusoïdal}
+  \end{figure}
+  
+  Nous avons d'abord mesuré la période du motif dans l'image en pixels. Nous avons vu que le motif se
+  répétait tous les 100 pixels. Nous pouvons déterminer cette période en mètre, en sachant que la résolution
+  horizontal est de 150 pixels/pouce, grâce aux calcules : 
+  
+  $$\frac{100}{150} \simeq 0,66 pouces$$
+  $$\frac{0,66}{100} = 0,016896 m$$
+  \ \\
+  
+  Nous avons donc une période de 0,016m pour le motif présent dans l'image.
+  Nous pouvons maintenant calculer la fréquence spatial du motif avec le calcule :
+  
+  $$\frac{1}{0,016896} \simeq 60 cycle/m$$
+  $$ = \frac{1}{100} cycle/pixel$$
+  
+  \newpage
   
   \section*{Conclusion}
+  Lors de ce TP, nous avons appris à utiliser des méthode basique de ré-échantillonnement d'image couleur. De plus, 
+  nous avons vu que le sous-échantillonage était destructif et qu'il n'était pas possible de récupérer les données
+  avec un sur-échantillonage.
  
     
 \end{document}  
