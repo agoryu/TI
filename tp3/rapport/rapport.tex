@@ -131,16 +131,16 @@
   
   \section*{Introduction}
   Ce TP a pour objectif de détailler la composition d'une image couleur afin de pouvoir 
-  effectuer des traitements de rééchantillonnement dessus. Nous allons donc chercher à sur-échantilloner et à 
+  effectuer des traitements de ré-échantillonnement dessus. Nous allons donc chercher à sur-échantilloner et à 
   sous-échantillonner une image afin de comprendre les limites de ce procédé.
   
   \section{Composantes d'une image couleur}
-  Nous allons d'abord voir comment manipulé les composantes d'une image couleur à partir de l'image de calibrage
-  de couleur fournit dans le TP. On peut voir que la taille de la variable contenant l'image est de 1 440 000,
-  qui correspond à $<largeur> * <hauteur> * <nombre de canaux>$.\\
+  Nous allons d'abord voir comment manipuler les composantes d'une image couleur à partir de l'image de calibrage
+  de couleur fournie dans le TP. On peut voir que la taille de la variable contenant l'image est de 1 440 000,
+  ce qui correspond à $<largeur> * <hauteur> * <nombre de canaux>$.\\
   
   Pour récupérer la composante d'une couleur en image de gris, il suffit de récupérer le vecteur d'une des composantes
-  et de l'afficher seul. Nous avons ainsi une matrice avec les valeurs de rouge et vu que nous ne gardons qu'une matrice,
+  et de l'afficher seul. Nous avons ainsi une matrice avec les valeurs de rouge, mais étant donné que nous ne gardons qu'une matrice,
   l'image se transforme en dégradé de gris.\\
   
   \begin{figure}[H]
@@ -149,7 +149,7 @@
     \caption{Image en niveau de gris}
   \end{figure}
   
-  La récupération d'une image dans un dégradé d'une seul couleur, il faut annuler les deux autres canaux en les multipliant par
+  La récupération d'une image dans un dégradé d'une seule couleur se fait en annulant les deux autres canaux en les multipliant par
   zéro.
   
   \begin{figure}[H]
@@ -161,14 +161,13 @@
   \section{Sur et sous-échantillonnage}
   Nous allons, avant de définir les notions de sur et sous-échantillonage, calculer les dimensions du support
   initial de l'image en prenant comme résolution d'acquisition 72 pixel/pouce. Ce calcul correspond à :
-  <nb pixels sur x> / 72 et <nb pixels sur y> /72. Ce qui nous donne un support de 11x8 pouces.
+  <nb pixels sur x> / 72 et <nb pixels sur y> /72, ce qui nous donne un support de 11x8 pouces.
   
-  %800/72 = 11
-  %600/72 = 8
   \subsection{Sous-échantillonage}
-  Pour effectuer un sous-échantillonage, il faut supprimer un pixel tout les N pixels dans le vecteur de chaque canaux.
-  Pour cela il faut supprimer une valeur tout les N pixel et supprimer une ligne toutes les N lignes. L'image contiendra
-  alors N fois moins de pixels que l'image d'origine et sera donc N fois plus petite. Nous avons alors l'algorithme suivant.\\
+  Pour effectuer un sous-échantillonage, il faut supprimer un pixel tous les N pixels dans le vecteur de chaque canal,
+  N étant le facteur de rétrécissement de l'image.
+  Pour cela il faut supprimer une valeur tous les N pixels sur une ligne et enlever une ligne sur N. L'image contiendra
+  alors N fois moins de pixels que l'image d'origine et sera donc N fois plus petite. Nous avons alors l'algorithme suivant :\\
 
   \begin{lstlisting}[caption=Fonction permettant le sous-échantillonnement d'une image]
     function [newImg] = sousEchant(img,n)
@@ -188,8 +187,8 @@
   
   \subsection{Sur-échantillonage}
   Pour le sur-échantillonage, nous avons utilisé le ré-échantillonage au plus proche voisin. Le principe
-  est de dupliqué un pixel. Si la valeur de N vaut 2, nous ajoutons un pixel à droite, un en bas et un en diagonale.
-  Ce qui nous donne l'algorithme suivant :\\
+  est de dupliquer un pixel. Par exemple, si la valeur de N vaut 2, nous ajoutons un pixel à droite, un en bas et un en diagonal,
+  ce qui nous donne l'algorithme suivant :\\
   
   \begin{lstlisting}[caption=Fonction permettant le sur-échantillonnement d'une image]
     function [newImg] = surEchant(img,n)
@@ -213,30 +212,29 @@
     endfunction;
   \end{lstlisting}
   
-  Le problème avec cette algorithme est que l'image va se pixeliser lorsque N va devenir trop grand. Il existe 
-  d'autre algorithme de sur-échantillonage mais contrairement à notre algorithme, l'image résultante sera légèrement flouté quand N sera grand.
-  La majorité des autres algorithme vont calculer la moyenne dans le voisinage du pixel recherché. Cela a pour 
-  effet de créer un dégradé de la couleur autour des pixels connu et donne un rendu flouté.
+  Le problème de cet algorithme est que l'image va se pixeliser lorsque N va devenir trop grand. Il existe 
+  d'autres algorithmes de sur-échantillonage qui, contrairement à notre algorithme, utilisent une moyenne
+  sur un voisinage de pixels comme valeur d'un nouveau pixel. Mais contrairement à notre algorithme, l'image 
+  résultante sera légèrement floutée quand N sera grand.
   
   %\subsection{Cumulation d'échantillonage}
   %TODO faire les tests
   
   \section{Quantification}
-  La quantification permet de réduire le nombre de valeur dans un canal afin de minimiser la taille de l'image.\\
+  La quantification permet de réduire le nombre de valeurs dans un canal afin de minimiser la taille de l'image.\\
   
   Pour trouver la valeur de chaque intervalle, nous avons appliqué la formule suivante : $((maxVal - minVal) / m) / (maxVal - minVal)$
-  où m est le nombre d'intervalle souhaité. La valeur de $m$ est égale à $2^{nbBit}$. Par exemple pour 8 bits nous avons 256 
+  où m est le nombre d'intervalles souhaités. La valeur $m$ dépend du nombre de pixels que l'on souhaite utiliser
+  pour un canal. La valeur de $m$ est donc égale à $2^{nbBit}$. Par exemple pour 8 bits, nous avons 256 
   niveau de gris, donc 256 intervalles.\\
   
-  Une fois que nous avons les intervalles, il faut que la valeur de chaque pixel soit égale à la valeur de l'intervalle 
-  inférieur à cette valeur. Cette méthode n'est pas la plus optimale mais elle est la plus simple. On pourrait également 
-  chercher l'intervalle le plus proche d'un pixel et modifier sa valeur pour qu'il soit égale à la valeur de l'intervalle.
+  Une fois que nous avons les valeurs des intervalles, il faut que la valeur de chaque pixel soit égale à l'intervalle 
+  inférieur à ce pixel. Cette méthode n'est pas la plus optimale mais elle est la plus simple. On pourrait également 
+  chercher l'intervalle le plus proche d'un pixel et modifier sa valeur pour qu'il soit égal à celui-ci.
   
   \newpage
   
-  %TODO verif algo et test sur image
   \section{Repliement de spectre}
-  %question 1 pixel/m -> resPeriode / 150
   Nous allons maintenant calculer la fréquence de l'image suivante :
   \begin{figure}[H]
     \center
@@ -246,14 +244,14 @@
   
   Nous avons d'abord mesuré la période du motif dans l'image en pixels. Nous avons vu que le motif se
   répétait tous les 100 pixels. Nous pouvons déterminer cette période en mètre, en sachant que la résolution
-  horizontal est de 150 pixels/pouce, grâce aux calcules : 
+  horizontale est de 150 pixel/pouce, grâce aux calculs : 
   
   $$\frac{100}{150} \simeq 0,66 pouces$$
   $$\frac{0,66}{100} = 0,016896 m$$
   \ \\
   
   Nous avons donc une période de 0,016m pour le motif présent dans l'image.
-  Nous pouvons maintenant calculer la fréquence spatial du motif avec le calcule :
+  Nous pouvons maintenant calculer la fréquence spatiale du motif avec le calcul :
   
   $$\frac{1}{0,016896} \simeq 60 cycle/m$$
   $$ = \frac{1}{100} cycle/pixel$$
@@ -261,7 +259,7 @@
   \newpage
   
   \section*{Conclusion}
-  Lors de ce TP, nous avons appris à utiliser des méthode basique de ré-échantillonnement d'image couleur. De plus, 
+  Lors de ce TP, nous avons appris à utiliser des méthodes basiques de ré-échantillonnement d'image couleur. De plus, 
   nous avons vu que le sous-échantillonage était destructif et qu'il n'était pas possible de récupérer les données
   avec un sur-échantillonage.
  
