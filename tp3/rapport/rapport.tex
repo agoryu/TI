@@ -130,6 +130,9 @@
   \clearpage
   
   \section*{Introduction}
+  Ce TP a pour objectif de détailler la composition d'une image couleur afin de pouvoir 
+  effectuer des traitements de rééchantillonage dessus. Nous allons donc cherche à sur et 
+  sous-échantilloner une image afin de comprendre les limites de ce procédé.
   
   \section{Composantes d'une image couleur}
   Nous allons d'abord voir comment manipulé les composantes d'une image couleur à partir de l'image de calibrage
@@ -164,8 +167,8 @@
   %600/72 = 8
   \subsection{Sous-échantillonage}
   Pour effectuer un sous-échantillonage, il faut supprimer un pixel tout les N pixels dans le vecteur de chaque canaux.
-  Pour cela on récupère un vecteur avec l'ensemble des pixels de l'image, on en supprime le nombre nécessaire
-  et on reforme la matrice de l'image.\\
+  Pour cela il faut supprimer une valeur tout les N pixel et supprimer une ligne toutes les N lignes. L'image contiendra
+  alors N fois moins de pixels que l'image d'origine et sera donc N fois plus petite. Nous avons alors l'algorithme suivant.\\
 
   \begin{lstlisting}[caption=Fonction permettant le sous-échantillonnement d'une image]
     function [newImg] = sousEchant(img,n)
@@ -184,10 +187,9 @@
   \end{lstlisting}
   
   \subsection{Sur-échantillonage}
-  L'algorithme de sur-échantillonner d'une image doit prendre un groupe de pixels afin de faire la moyenne de leur valeur
-  pour un canal. Ensuite, il suffit de créer un pixel au centre de ce groupe avec comme valeur la moyenne précédement calculer.
-  Pour déterminer les groupes de pixel, il faut diviser le nombre de pixel sur une ligne par N et faire pareil sur une colonne.
-  Ainsi les pixels ajouté auront une distance régulière avec une valeur moyenne.\\
+  Pour le sur-échantillonage, nous avons utilisé le ré-échantillonage au plus proche voisin. Le principe
+  est de dupliqué un pixel. Si la valeur de N vaut 2, nous ajoutons un pixel à droite, un en bas et un en diagonale.
+  Ce qui nous donne l'algorithme suivant :\\
   
   \begin{lstlisting}[caption=Fonction permettant le sur-échantillonnement d'une image]
     function [newImg] = surEchant(img,n)
@@ -209,6 +211,11 @@
         end;
     endfunction;
   \end{lstlisting}
+  
+  Le problème avec cette algorithme est que l'image va se pixeliser lorsque N va devenir trop grand. Il existe 
+  d'autre algorithme de sur-échantillonage mais contrairement à notre algorithme, l'image résultante sera flouté.
+  La majorité des autres algorithme vont calculer la moyenne dans le voisinage du pixel recherché. Cela a pour 
+  effet de créer un dégradé de la couleur autour des pixels connu et donne un rendu flouté.
   
   \subsection{Cumulation d'échantillonage}
   %TODO faire les tests
