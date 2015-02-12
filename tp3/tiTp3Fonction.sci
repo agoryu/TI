@@ -33,7 +33,7 @@ endfunction;
 
 function [quant] = quantification(img, vmin, vmax)
     im = im2double(img);
-    quant = im * vmax + vmin;
+    quant = im * vmax - vmin;
 endfunction;
 
 function [periode] = calcPeriode(img, vmin, vmax)
