@@ -4,7 +4,7 @@ macro "correction" {
 	H = getHeight();
 
 	//contraste
-	a = -100;
+	a = 0;
 	//luminosite
 	b = 2;
 

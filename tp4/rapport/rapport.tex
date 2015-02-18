@@ -130,14 +130,124 @@
   \clearpage
   
   \section*{Introduction}
-  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but de travailler et de comprendre
-  le fonctionnement de l'histogramme de niveau de gris. Pour cela nous avons effectué des exercices 
-  sur le changement de la dynamique de gris 
+  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but d'utiliser et de comprendre
+  le fonctionnement de l'histogramme de niveaux de gris. Pour cela, nous avons effectué des exercices 
+  sur le changement de la dynamique de gris en utilisant des LUT\footnote{Look Up Table}.
 
-  \section{
+  \section{Extension de l'histogramme de niveau de gris}
+  Pour commencer, nous avons écris une macro permettant de récupérer les niveaux de gris minimum et 
+  maximum d'une image dans le but de les modifier afin d'avoir une dynamique de gris allant de 
+  0 à 255. Pour cela nous avons appliqué la transformation linéaire suivante : 
+  \begin{align*}
+   round\left(\frac{255 * pixel(i,j) - min}{max - min}\right)
+  \end{align*}
+
+  Dans cette formule, la fonction round permet d'arrondir le résultat à l'entier le plus proche.
+  En effectuant ce calcul sur chaque pixel, nous obtenons les résultat suivant :\\
+  
+  \begin{tabular}{|c|c|c|c|}
+   \hline
+   image départ & histogramme & image étendue & histogramme\\
+   \hline
+   \includegraphics[width=3cm]{barb.png} & \includegraphics[width=3cm]{../histo/image/hist_barb.png} & \includegraphics[width=3cm]{../res/barbQ1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_barbQ1.png}\\
+   \hline
+   \includegraphics[width=3cm]{boat.png} & \includegraphics[width=3cm]{../histo/image/hist_boat.png} & \includegraphics[width=3cm]{../res/boatQ1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_boatQ1.png}\\
+   \hline
+   \includegraphics[width=3cm]{goldhill.png} & \includegraphics[width=3cm]{../histo/image/hist_goldhill.png} & \includegraphics[width=3cm]{../res/goldhillQ1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_goldhillQ1.png}\\
+   \hline
+  \end{tabular}
+  
+  \newpage
+  
+  \begin{tabular}{|c|c|c|c|} 
+   \hline
+   \includegraphics[width=3cm]{lena512.png} & \includegraphics[width=3cm]{../histo/image/hist_lena512.png} & \includegraphics[width=3cm]{../res/lena512Q1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_lena512Q1.png}\\
+   \hline
+   \includegraphics[width=3cm]{mandrill.png} & \includegraphics[width=3cm]{../histo/image/hist_mandrill.png} & \includegraphics[width=3cm]{../res/mandrillQ1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_mandrillQ1.png}\\
+   \hline
+   \includegraphics[width=3cm]{peppers.png} & \includegraphics[width=3cm]{../histo/image/hist_peppers.png} & \includegraphics[width=3cm]{../res/peppersQ1.png} & \includegraphics[width=3cm]{../histo/resultat/hist_peppersQ1.png}\\
+   \hline
+  \end{tabular}\\
+  
+  Sur ces résultats, nous pouvons voir que lorsque nous étendons l'histogramme de gris, le contraste de l'image augmente. Cela
+  est d'autant plus visible lorque l'image originale n'avait aucun pixel dans le niveau 0.
+  
+  \section{Correction affine}
+  Nous avons ensuite appliqué une correction affine du type $a+b.I(x,y)$ sur les images.
+  Nous avons remarqué que plus la valeur de $a$ augmente, moins le contraste va être important.
+  En effet, nous allons additionner une valeur constante à chaque pixel. Donc le nombre de pixel
+  sombre va diminuer et le nombre de pixel dont la valeur va être supérieur à 255 va augmenter.
+  Etant donné, qu'il n'y a pas plus de 256 niveaux de gris, le nombre de pixels blanc va augmenter
+  et la différence entre les niveaux de gris minimum et maximum va se réduire.\\
+  
+  En revanche, la valeur de $b$ va intéragir sur la luminosité de l'image, plus la valeur sera grande,
+  plus la luminosité sera importante.
+  Etant donné que nous multiplions chaque pixel par une valeur constante, nous aurons de moins en moins
+  de niveaux de gris dans l'image et le nombre de pixels dans les niveaux de gris très claire
+  va augmenté.
+  
+  \section{Egalisation d'histogramme}
   
   \section*{Conclusion}
   
- 
+  \newpage
+  
+  \section*{Annexes}
+  \begin{lstlisting}[caption=Macro d'extension d'histogramme]
+  macro "setDynamiqueGray" {
+
+    image = getImageID();
+
+    W = getWidth();
+    H = getHeight();
+
+    min = 255;
+    max = 0;
+
+    for (j=0; j<H; j++) {
+        for (i=0; i<W; i++) {
+
+            p = getPixel(i,j);
+            if ( min > p) {
+                min = p;
+            }
+
+            if ( max < p) {
+                max = p;
+            }
+         }
+     }
+
+     for (j=0; j<H; j++) {
+         for (i=0; i<W; i++) {
+
+             res = round(255 * ((getPixel(i,j) - min)/(max - min)));
+             setPixel(i, j, res);
+         }
+     }
+  }
+  \end{lstlisting}
+  
+  \begin{lstlisting}[caption=Macro de la correction affine]
+   macro "correction" {
+
+      W = getWidth();
+      H = getHeight();
+
+      //contraste
+      a = -100;
+      //luminosite
+      b = 2;
+
+      for (j=0; j<H; j++) {
+         for (i=0; i<W; i++) {
+
+            res = a + b * getPixel(i,j);
+            setPixel(i, j, res);
+          }
+      }
+   }
+  \end{lstlisting}
+
     
 \end{document}  
