@@ -184,12 +184,63 @@
   plus la luminosité sera importante.
   Etant donné que nous multiplions chaque pixel par une valeur constante, nous aurons de moins en moins
   de niveaux de gris dans l'image et le nombre de pixels dans les niveaux de gris très claire
-  va augmenté.
+  va augmenté.\\
+  
+  \begin{tabular}{|c|c|c|}
+      \hline
+      Image d'origine de la mandrill & \includegraphics[width=3cm]{mandrill.png} & \includegraphics[width=4cm]{../histo/image/hist_mandrill.png}\\
+      \hline
+      Image avec a=50 et b=1 & \includegraphics[width=3cm]{../res/mandrillQ2_50x1.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_50x1.png}\\
+      \hline
+      Image avec a=0 et b=2 & \includegraphics[width=3cm]{../res/mandrillQ2_0x2.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_0x2.png}\\
+      \hline
+  \end{tabular}
+  
   
   \section{Egalisation d'histogramme}
+  L'égalisation d'histrogramme est un procédé qui permet de mieu répartir les niveaux de gris sur une image.
+  Pour pouvoir le calculer il nous faut d'abord récupérer l'histogramme cumulé. 
+  Cette histogramme s'obtient en effectuant le calcul suivant : $hist(T)=hist(T)+hist(T-1)$. Nous obtenons donc
+  un histogramme dont le nombre de pixel par niveau de gris augmente avec ce niveau. Ensuite, nous modifions la valeur de chaque pixel
+  de l'image en utilisant une LUT. Lorsque nous allons modifier un pixel, nous reagardons dans une table de correspondance pour 
+  connaitre la nouvelle valeur du pixel que nous voulons modifier. Pour cela nous utilisons la macro suivante :
   
+  \begin{lstlisting}
+       ratio = 255 / (W * H);
+
+       for (j=0; j<H; j++) {
+           for (i=0; i<W; i++) {
+               p = getPixel(i, j);
+               new = cumule[p];
+               setPixel(i, j, new * ratio);
+           }
+       }
+  \end{lstlisting}
+
+  Ce qui nous donne les résultats suivant : \\
+  
+  \begin{tabular}{|c|c|c|c|}
+   \hline
+   image départ & histogramme & image égalisé & histogramme\\
+   \hline
+   \includegraphics[width=3cm]{barb.png} & \includegraphics[width=3cm]{../histo/image/hist_barb.png} & \includegraphics[width=3cm]{../res/barbQ3.png} & \includegraphics[width=3cm]{../histo/resultat/barbQ3.png}\\
+   \hline
+   \includegraphics[width=3cm]{boat.png} & \includegraphics[width=3cm]{../histo/image/hist_boat.png} & \includegraphics[width=3cm]{../res/boatQ3.png} & \includegraphics[width=3cm]{../histo/resultat/boatQ3.png}\\
+   \hline
+   \includegraphics[width=3cm]{goldhill.png} & \includegraphics[width=3cm]{../histo/image/hist_goldhill.png} & \includegraphics[width=3cm]{../res/goldhillQ3.png} & \includegraphics[width=3cm]{../histo/resultat/goldhillQ3.png}\\
+   \hline
+   \includegraphics[width=3cm]{lena512.png} & \includegraphics[width=3cm]{../histo/image/hist_lena512.png} & \includegraphics[width=3cm]{../res/lena512Q3.png} & \includegraphics[width=3cm]{../histo/resultat/lena512Q3.png}\\
+   \hline
+   \includegraphics[width=3cm]{mandrill.png} & \includegraphics[width=3cm]{../histo/image/hist_mandrill.png} & \includegraphics[width=3cm]{../res/mandrillQ3.png} & \includegraphics[width=3cm]{../histo/resultat/mandrillQ3.png}\\
+   \hline
+   \includegraphics[width=3cm]{peppers.png} & \includegraphics[width=3cm]{../histo/image/hist_peppers.png} & \includegraphics[width=3cm]{../res/peppersQ3.png} & \includegraphics[width=3cm]{../histo/resultat/peppersQ3.png}\\
+   \hline
+  \end{tabular}\\
+  
+  On peut voir que l'égalisation des histogramme n'est pas parfaite, que certain niveau gris ne sont pas utilisé et que d'autres 
+  possèdent trop de valeur. Obtenir un histogramme parfaitement égalisé est très difficile, voir impossible.
   \section*{Conclusion}
-  
+  Lors de ce TP, nous avons pu voir plusieurs transformations d'histogramme et leur impacte sur l'image.
   \newpage
   
   \section*{Annexes}
