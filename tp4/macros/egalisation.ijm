@@ -8,9 +8,9 @@ macro "egalisation" {
   	getHistogram(values, counts, bins);
   	cumule = newArray(256);
 
-  	cumule[0] = values[0];
+  	cumule[0] = counts[0];
 	for (j=1; j<256; j++) {
-	   	cumule[j] = cumule[j-1] + values[j];
+	   	cumule[j] = cumule[j-1] + counts[j];
 	}
 
 	ratio = 255 / (W * H);
