@@ -181,7 +181,7 @@
    \item Si $min<(255-max)$ alors la moyenne augmente, l'image est donc plus claire.
   \end{itemize}
   
-    \begin{figure}[H]
+  \begin{figure}[H]
     \center
     \includegraphics[width=9cm]{LUT-Q1.png}
     \caption{LUT pour étendre la dynamique sur GIMP}
@@ -191,9 +191,9 @@
   Nous avons ensuite appliqué une correction affine du type $a+b.I(x,y)$ sur les images.
   Nous avons remarqué que plus la valeur de $a$ augmente, avec un $b$ fixé à 1, plus la 
   luminosité augmente. En effet, nous allons additionner une valeur constante à chaque 
-  pixel, ce qui entraine une augmentation de $+a$ de la moyenne. Donc le nombre de pixels 
+  pixel, ce qui entraine une augmentation de $+a$ de la moyenne. Donc les pixels sombres
   %sombres deviendra plus clair et les pixels supérieurs à $255-a$ seront saturé à 255. 
-  sombres diminuera et les pixels supérieurs à $255+a$ seront saturé à 255.
+  s'éclaircirons et les pixels supérieurs à $255-a$, de l'image d'origine, seront saturé à 255 dans l'image résultante.
   Lorsque l'on prend une valeur négative pour $a$, l'image s'assombrit. Comme il y a 256 
   niveaux de gris, pour une image 8 bits, le nombre de pixels saturés au blanc va augmenter
   et l'écart-type va diminuer. Cependant, si nous conservons les valeurs au delà de 255 
@@ -207,7 +207,10 @@
    \item Si $b==1$ alors l'écart-type reste constante.
    \item Si $b>1$ alors l'écart-type augmente, l'image est donc plus contrastée.
   \end{itemize}
-  \ \\
+  Le même effet se produit lorsque $b$ est supérieur à 1, on perd de l'information et 
+  certains pixels seront saturés à 255. Pour conserver même moyenne, il faut jouer avec 
+  un $a$ négatif. Inversement si $b$ est inférieur il faut que $a$ soit positif pour 
+  conserver la moyenne.\\
   
   \begin{tabular}{|c|c|c|}
     \hline
@@ -219,32 +222,66 @@
     \hline
     \shortstack{Augmentation de l'écart-type \\ et de la moyenne \\ a=0, b=2 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2_0x2.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_0x2.png}\\
     \hline
-    \shortstack{Fonction proximative du contraste \\ a=-64*b, b=2 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2__constrast.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_constrast.png}\\
-    \hline
   \end{tabular}
+  
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \shortstack{Fonction proximative du contraste \\ a=-50*b, b=1.5 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2_contrast.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_contrast.png}\\
+    \hline
+  \end{tabular}\\
+  
+  \ \\
+  
+  Cette équation représente la droite de transformation de la LUT. Dans cette parie, 
+  la fonction est affine, avec $b$ le coefficient directeur et $a$ l 'ordonnée à 
+  l'origine de la droite de la LUT.
+  
+  \begin{figure}[H]
+    \center
+    \includegraphics[width=10cm]{../res/Q2_LUT1.png}
+    \caption{LUT avec $b=2$ et $a=0$ sur GIMP}
+  \end{figure}
+  
+  \begin{figure}[H]
+    \center
+    \includegraphics[width=10cm]{../res/Q2_LUT2.png}
+    \caption{LUT avec $b=2$ et $a=-128$ sur GIMP}
+  \end{figure}
+
+  \ \\
+  
+
   
   
   \section{Egalisation d'histogramme}
   L'égalisation d'histrogramme est un procédé qui permet de mieux répartir les niveaux de gris sur une image.
+  De manière générale, l'égalisation de l'histogramme consiste en une transformation des niveaux de gris non 
+  proportionnelle. La droite de la LUT n'est plus affine mais polynomiale. Les plages où les niveaux de gris 
+  sont denses seront étirées et les plages où les niveaux de gris sont peu denses seront resserrées.\\
+  
   Pour pouvoir le calculer il nous faut d'abord récupérer l'histogramme cumulé. 
   Cet histogramme s'obtient en effectuant le calcul suivant : $hist(T)=hist(T)+hist(T-1)$. Nous obtenons donc
   un histogramme dont le nombre de pixels par niveau de gris augmente avec ce niveau. Ensuite, nous modifions la valeur de chaque pixel
   de l'image en utilisant une LUT. Lorsque nous allons modifier un pixel, nous regardons dans une table de correspondance pour 
-  connaitre la nouvelle valeur du pixel que nous voulons modifier. Pour cela nous utilisons la macro suivante :
+  connaitre la nouvelle valeur du pixel que nous voulons modifier.\\
+  
+  Pour cela nous utilisons la macro suivante :\\
   
   \begin{lstlisting}
-       ratio = 255 / (W * H);
+  ratio = 255 / (W * H);
 
-       for (j=0; j<H; j++) {
-           for (i=0; i<W; i++) {
-               p = getPixel(i, j);
-               new = cumule[p];
-               setPixel(i, j, new * ratio);
-           }
-       }
+  for (j=0; j<H; j++) {
+    for (i=0; i<W; i++) {
+      p = getPixel(i, j);
+       new = cumule[p];
+       setPixel(i, j, new * ratio);
+    }
+  }
   \end{lstlisting}
 
-  Ce qui nous donne les résultats suivant : \\
+  \newpage
+
+  Ce qui nous donne les résultats suivant :\\
   
   \begin{tabular}{|c|c|c|c|}
    \hline
@@ -264,10 +301,24 @@
    \hline
   \end{tabular}\\
   
-  On peut voir que l'égalisation des histogrammes n'est pas parfaite, que certains niveaux de gris ne sont pas utilisés et que d'autres 
-  possèdent trop de valeurs. Obtenir un histogramme parfaitement égalisé est très difficile, voire impossible.
+  \newpage
+  
+  On peut voir que l'on n'obtient pas une égalisation parfaite des histogrammes,
+  que certains niveaux de gris ne sont pas utilisés et que d'autres possèdent trop 
+  de valeurs. Obtenir un histogramme parfaitement égalisé est très difficile, voire 
+  impossible. En effet, si un niveau de gris est plus fréquent dans l'image de départ 
+  il est impossible de fractionner ce niveau en plusieurs niveaux, afin d'équilibrer 
+  l'histogramme, avec une méthode ponctuelle. Mathématiquement, une fonction $f(x)$ 
+  ne peut pas retourner plusieurs $y$ pour un $x$ donné.\\
+  
   \section*{Conclusion}
-  Lors de ce TP, nous avons pu voir plusieurs transformations d'histogramme et leur impact sur l'image.
+  Lors de ce TP, nous avons vu que la transformation ponctuelle des niveaux se modélisait 
+  par une LUT. Puis, la luminosité et le contraste d'une image peuvent être modifiés par 
+  une fonction affine représentée par la droite de la LUT. Ainsi, la luminosité d'une 
+  image est un changement de ça moyenne de niveaux de gris, sans changement de l'écart-type 
+  et le contraste est une variation de l'écart-type sans changement de la moyenne. Enfin 
+  nous avons vu la méthode d'égalisation de l'histogramme des gris qui consiste à répartir
+  au mieux les niveaux de gris.
   \newpage
   
   \section*{Annexes}
@@ -325,6 +376,34 @@
           }
       }
    }
+  \end{lstlisting}
+  
+  \begin{lstlisting}[caption=Macro de l'égalisation de l'histogramme]
+  macro "egalisation" {
+
+    W = getWidth();
+    H = getHeight();
+
+    bins = 256;
+
+    getHistogram(values, counts, bins);
+    cumule = newArray(256);
+
+    cumule[0] = counts[0];
+    for (j=1; j<256; j++) {
+      cumule[j] = cumule[j-1] + counts[j];
+    }
+
+    ratio = 255 / (W * H);
+
+    for (j=0; j<H; j++) {
+      for (i=0; i<W; i++) {
+        p = getPixel(i, j);
+        new = cumule[p];
+        setPixel(i, j, new * ratio);
+      }
+    }
+  }
   \end{lstlisting}
 
     
