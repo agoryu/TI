@@ -130,13 +130,13 @@
   \clearpage
   
   \section*{Introduction}
-  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but manipulé des images
-  à l'aide de macros. Nous avons analysé les histogrammes de niveau de gris et mis en 
-  évidence certaines opérations possibles sur ces derniers. Ainsi, nous monterons que ces
+  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but de manipuler des images
+  à l'aide de macros. Nous avons analysé les histogrammes de niveaux de gris et mis en 
+  évidence certaines opérations possibles sur ces derniers. Ainsi, nous montrerons que ces
   opérations sont souvent associées avec une LUT\footnote{Look Up Table}.
 
   \section{Extension de dynamique de l'histogramme}
-  Pour commencer, nous avons écris une macro permettant de récupérer les niveaux de gris minimum et 
+  Pour commencer, nous avons écrit une macro permettant de récupérer les niveaux de gris minimum et 
   maximum d'une image dans le but de les modifier afin d'avoir une dynamique de gris allant de 
   0 à 255. Pour cela nous avons appliqué la transformation linéaire suivante : 
   \begin{align*}
@@ -144,7 +144,7 @@
   \end{align*}
 
   Dans cette formule, la fonction round permet d'arrondir le résultat à l'entier le plus proche.
-  En effectuant ce calcul sur chaque pixel, nous obtenons les résultat suivant :\\
+  En effectuant ce calcul sur chaque pixel, nous obtenons les résultats suivants :\\
   
   \begin{tabular}{|c|c|c|c|}
    \hline
@@ -173,12 +173,12 @@
   Sur ces résultats, nous pouvons voir que lorsque nous étendons l'histogramme de gris, le 
   contraste de l'image augmente. En effet, nous constatons que, dans tous les cas, l'écart-type 
   augmente, sauf lorsque la dynamique des niveaux de gris varie déjà entre 0 et 255. Nous 
-  avons remarquons aussi les propriétés suivantes:
+  avons remarqué aussi les propriétés suivantes:
   
   \begin{itemize}
    \item Si $min>(255-max)$ alors la moyenne diminue, l'image est donc plus sombre.
    \item Si $min==(255-max)$ alors la moyenne reste identique.
-   \item Si $min<(255-max)$ alors la moyenne augmente, l'image est donc plus clair.
+   \item Si $min<(255-max)$ alors la moyenne augmente, l'image est donc plus claire.
   \end{itemize}
   
     \begin{figure}[H]
@@ -190,21 +190,22 @@
   \section{Correction affine}
   Nous avons ensuite appliqué une correction affine du type $a+b.I(x,y)$ sur les images.
   Nous avons remarqué que plus la valeur de $a$ augmente, avec un $b$ fixé à 1, plus la 
-  luminosité augmentée. En effet, nous allons additionner une valeur constante à chaque 
-  pixel, ce qui entraine une augmentation de $+a$ de la moyenne. Donc le nombre de pixel 
-  sombre deviendrons plus clair et les pixels supérieurs à $255-a$ seront saturé à 255. 
+  luminosité augmente. En effet, nous allons additionner une valeur constante à chaque 
+  pixel, ce qui entraine une augmentation de $+a$ de la moyenne. Donc le nombre de pixels 
+  %sombres deviendra plus clair et les pixels supérieurs à $255-a$ seront saturé à 255. 
+  sombres diminuera et les pixels supérieurs à $255+a$ seront saturé à 255.
   Lorsque l'on prend une valeur négative pour $a$, l'image s'assombrit. Comme il y a 256 
-  niveaux de gris, pour une image 8 bits, le nombre de pixels saturé au blanc va augmenter
-  et l'écart-type va diminué. Cependant, si nous conservons les valeurs au delà de 255 
+  niveaux de gris, pour une image 8 bits, le nombre de pixels saturés au blanc va augmenter
+  et l'écart-type va diminuer. Cependant, si nous conservons les valeurs au delà de 255 
   l'écart-type reste invariant si $b$ vaut 1.\\
   
   En revanche, la valeur de $b$ va intéragir sur le contraste de l'image, plus la valeur 
-  sera grande, plus l'histogramme sera étendue. Ce coefficient influt directement sur 
+  sera grande, plus l'histogramme sera étendu. Ce coefficient influe directement sur 
   l'écart-type de l'image:
   \begin{itemize}
-   \item Si $b<1$ alors l'écart-type diminue, l'image est donc moins contrasté.
+   \item Si $b<1$ alors l'écart-type diminue, l'image est donc moins contrastée.
    \item Si $b==1$ alors l'écart-type reste constante.
-   \item Si $b>1$ alors l'écart-type augmente, l'image est donc plus contrasté.
+   \item Si $b>1$ alors l'écart-type augmente, l'image est donc plus contrastée.
   \end{itemize}
   \ \\
   
@@ -224,11 +225,11 @@
   
   
   \section{Egalisation d'histogramme}
-  L'égalisation d'histrogramme est un procédé qui permet de mieu répartir les niveaux de gris sur une image.
+  L'égalisation d'histrogramme est un procédé qui permet de mieux répartir les niveaux de gris sur une image.
   Pour pouvoir le calculer il nous faut d'abord récupérer l'histogramme cumulé. 
-  Cette histogramme s'obtient en effectuant le calcul suivant : $hist(T)=hist(T)+hist(T-1)$. Nous obtenons donc
-  un histogramme dont le nombre de pixel par niveau de gris augmente avec ce niveau. Ensuite, nous modifions la valeur de chaque pixel
-  de l'image en utilisant une LUT. Lorsque nous allons modifier un pixel, nous reagardons dans une table de correspondance pour 
+  Cet histogramme s'obtient en effectuant le calcul suivant : $hist(T)=hist(T)+hist(T-1)$. Nous obtenons donc
+  un histogramme dont le nombre de pixels par niveau de gris augmente avec ce niveau. Ensuite, nous modifions la valeur de chaque pixel
+  de l'image en utilisant une LUT. Lorsque nous allons modifier un pixel, nous regardons dans une table de correspondance pour 
   connaitre la nouvelle valeur du pixel que nous voulons modifier. Pour cela nous utilisons la macro suivante :
   
   \begin{lstlisting}
@@ -247,7 +248,7 @@
   
   \begin{tabular}{|c|c|c|c|}
    \hline
-   image départ & histogramme & image égalisé & histogramme\\
+   image départ & histogramme & image égalisée & histogramme\\
    \hline
    \includegraphics[width=3cm]{barb.png} & \includegraphics[width=3cm]{../histo/image/hist_barb.png} & \includegraphics[width=3cm]{../res/barbQ3.png} & \includegraphics[width=3cm]{../histo/resultat/barbQ3.png}\\
    \hline
@@ -263,10 +264,10 @@
    \hline
   \end{tabular}\\
   
-  On peut voir que l'égalisation des histogramme n'est pas parfaite, que certain niveau gris ne sont pas utilisé et que d'autres 
-  possèdent trop de valeur. Obtenir un histogramme parfaitement égalisé est très difficile, voir impossible.
+  On peut voir que l'égalisation des histogrammes n'est pas parfaite, que certains niveaux de gris ne sont pas utilisés et que d'autres 
+  possèdent trop de valeurs. Obtenir un histogramme parfaitement égalisé est très difficile, voire impossible.
   \section*{Conclusion}
-  Lors de ce TP, nous avons pu voir plusieurs transformations d'histogramme et leur impacte sur l'image.
+  Lors de ce TP, nous avons pu voir plusieurs transformations d'histogramme et leur impact sur l'image.
   \newpage
   
   \section*{Annexes}
