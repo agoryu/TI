@@ -130,11 +130,12 @@
   \clearpage
   
   \section*{Introduction}
-  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but d'utiliser et de comprendre
-  le fonctionnement de l'histogramme de niveaux de gris. Pour cela, nous avons effectué des exercices 
-  sur le changement de la dynamique de gris en utilisant des LUT\footnote{Look Up Table}.
+  Lors de ce TP, nous avons travaillé avec l'outil ImageJ dans le but manipulé des images
+  à l'aide de macros. Nous avons analysé les histogrammes de niveau de gris et mis en 
+  évidence certaines opérations possibles sur ces derniers. Ainsi, nous monterons que ces
+  opérations sont souvent associées avec une LUT\footnote{Look Up Table}.
 
-  \section{Extension de l'histogramme de niveau de gris}
+  \section{Extension de dynamique de l'histogramme}
   Pour commencer, nous avons écris une macro permettant de récupérer les niveaux de gris minimum et 
   maximum d'une image dans le but de les modifier afin d'avoir une dynamique de gris allant de 
   0 à 255. Pour cela nous avons appliqué la transformation linéaire suivante : 
@@ -169,31 +170,56 @@
    \hline
   \end{tabular}\\
   
-  Sur ces résultats, nous pouvons voir que lorsque nous étendons l'histogramme de gris, le contraste de l'image augmente. Cela
-  est d'autant plus visible lorque l'image originale n'avait aucun pixel dans le niveau 0.
+  Sur ces résultats, nous pouvons voir que lorsque nous étendons l'histogramme de gris, le 
+  contraste de l'image augmente. En effet, nous constatons que, dans tous les cas, l'écart-type 
+  augmente, sauf lorsque la dynamique des niveaux de gris varie déjà entre 0 et 255. Nous 
+  avons remarquons aussi les propriétés suivantes:
+  
+  \begin{itemize}
+   \item Si $min>(255-max)$ alors la moyenne diminue, l'image est donc plus sombre.
+   \item Si $min==(255-max)$ alors la moyenne reste identique.
+   \item Si $min<(255-max)$ alors la moyenne augmente, l'image est donc plus clair.
+  \end{itemize}
+  
+    \begin{figure}[H]
+    \center
+    \includegraphics[width=9cm]{LUT-Q1.png}
+    \caption{LUT pour étendre la dynamique sur GIMP}
+  \end{figure}
   
   \section{Correction affine}
   Nous avons ensuite appliqué une correction affine du type $a+b.I(x,y)$ sur les images.
-  Nous avons remarqué que plus la valeur de $a$ augmente, moins le contraste va être important.
-  En effet, nous allons additionner une valeur constante à chaque pixel. Donc le nombre de pixel
-  sombre va diminuer et le nombre de pixel dont la valeur va être supérieur à 255 va augmenter.
-  Etant donné, qu'il n'y a pas plus de 256 niveaux de gris, le nombre de pixels blanc va augmenter
-  et la différence entre les niveaux de gris minimum et maximum va se réduire.\\
+  Nous avons remarqué que plus la valeur de $a$ augmente, avec un $b$ fixé à 1, plus la 
+  luminosité augmentée. En effet, nous allons additionner une valeur constante à chaque 
+  pixel, ce qui entraine une augmentation de $+a$ de la moyenne. Donc le nombre de pixel 
+  sombre deviendrons plus clair et les pixels supérieurs à $255-a$ seront saturé à 255. 
+  Lorsque l'on prend une valeur négative pour $a$, l'image s'assombrit. Comme il y a 256 
+  niveaux de gris, pour une image 8 bits, le nombre de pixels saturé au blanc va augmenter
+  et l'écart-type va diminué. Cependant, si nous conservons les valeurs au delà de 255 
+  l'écart-type reste invariant si $b$ vaut 1.\\
   
-  En revanche, la valeur de $b$ va intéragir sur la luminosité de l'image, plus la valeur sera grande,
-  plus la luminosité sera importante.
-  Etant donné que nous multiplions chaque pixel par une valeur constante, nous aurons de moins en moins
-  de niveaux de gris dans l'image et le nombre de pixels dans les niveaux de gris très claire
-  va augmenté.\\
+  En revanche, la valeur de $b$ va intéragir sur le contraste de l'image, plus la valeur 
+  sera grande, plus l'histogramme sera étendue. Ce coefficient influt directement sur 
+  l'écart-type de l'image:
+  \begin{itemize}
+   \item Si $b<1$ alors l'écart-type diminue, l'image est donc moins contrasté.
+   \item Si $b==1$ alors l'écart-type reste constante.
+   \item Si $b>1$ alors l'écart-type augmente, l'image est donc plus contrasté.
+  \end{itemize}
+  \ \\
   
   \begin{tabular}{|c|c|c|}
-      \hline
-      Image d'origine de la mandrill & \includegraphics[width=3cm]{mandrill.png} & \includegraphics[width=4cm]{../histo/image/hist_mandrill.png}\\
-      \hline
-      Image avec a=50 et b=1 & \includegraphics[width=3cm]{../res/mandrillQ2_50x1.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_50x1.png}\\
-      \hline
-      Image avec a=0 et b=2 & \includegraphics[width=3cm]{../res/mandrillQ2_0x2.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_0x2.png}\\
-      \hline
+    \hline
+    Equation & Image $I'$ & Histogramme\\
+    \hline
+    \shortstack{Fonction sans changement \\ a=0, b=1 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{mandrill.png} & \includegraphics[width=4cm]{../histo/image/hist_mandrill.png}\\
+    \hline
+    \shortstack{Augmentation de la luminosité \\ a=50, b=1 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2_50x1.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_50x1.png}\\
+    \hline
+    \shortstack{Augmentation de l'écart-type \\ et de la moyenne \\ a=0, b=2 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2_0x2.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_0x2.png}\\
+    \hline
+    \shortstack{Fonction proximative du contraste \\ a=-64*b, b=2 \\ $I'(x,y)=a+b.I(x,y)$} & \includegraphics[width=3cm]{../res/mandrillQ2__constrast.png} & \includegraphics[width=4cm]{../histo/resultat/hist_mandrillQ2_constrast.png}\\
+    \hline
   \end{tabular}
   
   

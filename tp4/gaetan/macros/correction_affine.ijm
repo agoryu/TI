@@ -6,8 +6,8 @@
  
 macro "dynamque_auto"{
 
-	a = -100;
-	b = 1;
+    b = 1.2;
+	a = -64*b;	
 	
 	// Ouvrir image active
 	image = getImageID();
