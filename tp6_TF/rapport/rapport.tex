@@ -130,6 +130,9 @@
   \clearpage
   
   \section*{Introduction}
+  L'objectif de ce TP était de découvrir comment nous pouvons représenter les fréquences à l'intérieur 
+  d'une image. Nous avons étudié la transformée de Fourier afin de comprendre son fonctionnement et 
+  d'extraire différentes caractéristiques d'une image.
   
   \section{Fréquence spatiale}
   Nous avons d'abord recherché la période de l'image \enquote{256\_a.jpg} en cherchant
@@ -151,4 +154,23 @@
   
   Q3) Le maxima secondaire est égale à 0,1992 qui est à peu près égale à $\frac{1}{5}$, période 
   de l'image.
+  
+  \section{Coordonnées dans le plan de Fourier}
+  
+  \begin{lstlisting}[caption=Fonctions de passage aux coordonnées dans le plan de Fourier]
+  function fourierXCoordinate(imgXCoordinate, width) {
+    return (imgXCoordinate/width) - 0.5;
+  }
+
+  function fourierYCoordinate(imgYCoordinate, height) {
+    return ((imgYCoordinate/height) - 0.5) * -1;
+  }
+  \end{lstlisting}
+  
+  \section{Transformée de Fourier}
+  
+  \section*{Conclusion}
+  
+  \section*{Annexes}
+  
 \end{document}  
