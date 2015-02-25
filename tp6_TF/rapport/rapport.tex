@@ -31,6 +31,7 @@
 \usepackage{empheq}
 \usepackage{array}
 \usepackage{multicol}
+\usepackage{csquotes}
 %\usepackage{adjustbox}
 
 % insert code
@@ -135,27 +136,29 @@
   d'extraire différentes caractéristiques d'une image.
   
   \section{Fréquence spatiale}
-  Nous avons d'abord recherché la période de l'image \enquote{256\_a.jpg} en cherchant
-  la nombre de pixel séparant deux motifs. Nous avons trouvé une période de 5 pixels pous cette 
-  image, soit une fréquence spatiale de $\frac{1}{5}$.\\
+  Lors de ce TP, nous avons travaillé avec des images composées de raillure afin de pouvoir
+  facilement travailler sur les fréquences d'une image.\\
   
-  On peut voir que les coordonnées de la maxima sont (128, 128) pour cette image, ce qui équivaut 
-  à la position des basse fréquences (composante continu). On voit sur les images que nous avons testé que l'orientation
-  de la droite formé à partir des deux maxima est perpendiculaire aux motifs de l'image. Cela nous permet
-  de déterminer l'orientation de la répétition des motifs.
+  Dans un premier temps nous avons calculé la période des images, c'est à dire le nombre de fois 
+  qu'un motif se répète. Nous avons trouvé, pour les image \enquote{*\_a.jpg}, une période de 5 pixels pour toute les images. En effet,
+  ces images change de dimension, mais la période du motif ne change pas. Cela nous donne donc
+  une fréquence spatiale de $\frac{1}{5}$.
   
-  Lorsque nous calculons le maxima secondaire, 
+  \section{Raie maximale d'une image}
   
+  %TODO
+  La raie maximale d'une image correspond à la fréquence maximum présentent dans cette image. Grâce à
+  une macro, nous avons pu déterminer que cette valeur été situé au centre du graphique représentant
+  les descripteurs de Fourier. Cette position représente les basses fréquences de l'image (composante continu)
   
-  Les valeurs de Fourier restent les mêmes quelque soit l'orientation du motif. Seul l'orientation
-  de la droite change.
-  
-  Quelque soit la taille de l'image, les descripteurs de Fourrier ne seront pas modifié.
-  
-  Q3) Le maxima secondaire est égale à 0,1992 qui est à peu près égale à $\frac{1}{5}$, période 
-  de l'image.
-  
-  \section{Coordonnées dans le plan de Fourier}
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{FFT256a.png}
+   \caption{Représentation déscripteurs de Fourier avec la raie maximale au centre}
+  \end{figure}
+
+  Nous avons ensuite changé le plan de cette image afin que les descripteurs soit compris entre -0.5
+  et 0.5 pour normaliser l'image. Pour cela, nous avons appliqué la macro suivante sur chaque point du graphique.
   
   \begin{lstlisting}[caption=Fonctions de passage aux coordonnées dans le plan de Fourier]
   function fourierXCoordinate(imgXCoordinate, width) {
@@ -166,11 +169,142 @@
     return ((imgYCoordinate/height) - 0.5) * -1;
   }
   \end{lstlisting}
+
+  Dans ce calcule, nous divisons par width ou height afin de passer à un repère (0,1), puis nous effectuons une 
+  soustraction dans le but de se ramener à un repère (-0.5,0.5). Ce changement de repère nous permet de placer
+  les basses fréquences au centre du graphique.
   
-  \section{Transformée de Fourier}
+  \section{Second valeur maximale d'une image}
+  
+  Nous avons ensuite recherché la second valeur maximale de l'image grâce la macro suivante :
+  \begin{lstlisting}[caption=Fonctions de passage aux coordonnées dans le plan de Fourier]
+  for (j=0; j<H; j++)
+    {
+        for (i=0; i<W; i++) 
+        {
+            p = getPixel(i,j);
+            if ( max_1 < p)
+            {
+                max_2 = max_1;
+                i_max_2 = i_max_1;
+                j_max_2 = j_max_1;
+                max_1 =p;
+                i_max_1 = i;
+                j_max_1 = j;
+            } 
+        }
+    }
+  \end{lstlisting}
+  
+  %TODO ajout -> précise la fréquence
+  Cette seconde valeur va nous fournir deux informations :
+  \begin{itemize}
+   \item La fréquence du motif
+   \item l'orientation des motifs de l'image : la droite passant
+  par les deux valeurs maximales est perpendiculaire au motif. Ce qui signifie que si la droite est horizontal
+  alors les motifs de l'image se répète verticalement.
+  \end{itemize}
+
+  Cette second valeur va nous permettre de déterminer l'orientation des motifs de l'image. La droite passant
+  par les deux valeurs maximales est perpendiculaire au motif. Ce qui signifie que si la droite est horizontal
+  alors les motifs de l'image se répète verticalement.
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{FFT256a.png}
+   \includegraphics[width=5cm]{256_a.jpg}
+   \caption{Image avec une répétition de motif et son graphique de descripteurs de Fourier}
+  \end{figure}
+  
+  Nous avons remarqué que si des images ont la même fréquence, mais avec une orientation de répétition de motif
+  différente alors ces images auront les mêmes maximales.
+  
+  \begin{tabular}{|c|c|c|}
+  \hline
+   image & graphique des descripteurs de Fourier & seconde maximale \\
+  \hline
+  256\_a & \includegraphics[width=5cm]{FFT256a.png} & 0,1992\\
+  \hline
+  256\_b & \includegraphics[width=5cm]{FFT256b.jpg} & 0,1992\\
+  \hline
+  256\_d & \includegraphics[width=5cm]{FFT256d.png} & 0,1016\\
+  \hline
+  \end{tabular}
   
   \section*{Conclusion}
   
+  
+  \newpage
   \section*{Annexes}
+  
+  \begin{lstlisting}[caption=Macro complète du TP]
+  macro "direction FFT"
+{
+    // ouverture d'une image si necessaire - sinon la macro analyse l'image courante
+    //open ("/home/bmathon/Enseignement/TI/tp6_TF/images/256_a.jpg");
+
+    // recuperation de l'identifiant de l'image
+    image = getImageID();
+
+    // application de la TDF (FFT : Fast Fourier Transform)
+    run("FFT");
+
+    // recuperation de l'ID du module de la FFT
+    fourier = getImageID();
+
+    // recuperation de la taille W x H du module de la FFT
+    W = getWidth();
+    H = getHeight();
+
+    // recherche du max
+    max_1 = 0; 
+    i_max_1 = 0;
+    j_max_1 = 0;
+    max_2 = 0; 
+    i_max_2 = 0;
+    j_max_2 = 0;
+
+    
+    for (j=0; j<H; j++)
+    {
+        for (i=0; i<W; i++) 
+        {
+            p = getPixel(i,j);
+            if ( max_1 < p)
+            {
+                max_2 = max_1;
+                i_max_2 = i_max_1;
+                j_max_2 = j_max_1;
+                max_1 =p;
+                i_max_1 = i;
+                j_max_1 = j;
+            } 
+        }
+    }
+
+    // mise a zero de la valeur max
+
+    setPixel (i_max_1,j_max_1,0);
+    setPixel (i_max_2, j_max_2,0);
+
+    print("x1 = " + i_max_1 + " y1 = " + j_max_1);
+    print("x2 = " + i_max_2 + " y2 = " + j_max_2);
+    print("plan de Fourier");
+    fourrierX2 = i_max_2 / W - 0.5;
+    fourrierY2 = (j_max_2 / H - 0.5) * (-1);
+    print("x2 = " + fourrierX2 + " y2 = " + fourrierY2);
+
+    if((fourrierX2*fourrierX2) - (fourrierY2*fourrierY2) != 0) {
+        if(fourrierY2 != 0) {
+            print("horizontal");
+        } else {
+            print("vertical");
+        }
+    } else {
+        print("diagonal");
+    }
+}
+
+  \end{lstlisting}
   
 \end{document}  
