@@ -146,19 +146,9 @@
   
   \section{Raie maximale d'une image}
   
-  %TODO
-  La raie maximale d'une image correspond à la fréquence maximum présentent dans cette image. Grâce à
-  une macro, nous avons pu déterminer que cette valeur été situé au centre du graphique représentant
-  les descripteurs de Fourier. Cette position représente les basses fréquences de l'image (composante continu)
-  
-  \begin{figure}[H]
-  \center
-   \includegraphics[width=5cm]{FFT256a.png}
-   \caption{Représentation déscripteurs de Fourier avec la raie maximale au centre}
-  \end{figure}
-
-  Nous avons ensuite changé le plan de cette image afin que les descripteurs soit compris entre -0.5
-  et 0.5 pour normaliser l'image. Pour cela, nous avons appliqué la macro suivante sur chaque point du graphique.
+  Nous avons abord changé le plan de cette image pour que les descripteurs soit compris entre -0,5
+  et 0,5 afin de se border aux fréquences maximales d'une image. Pour cela, nous avons appliqué la 
+  macro suivante sur chaque point du graphique.
   
   \begin{lstlisting}[caption=Fonctions de passage aux coordonnées dans le plan de Fourier]
   function fourierXCoordinate(imgXCoordinate, width) {
@@ -169,10 +159,21 @@
     return ((imgYCoordinate/height) - 0.5) * -1;
   }
   \end{lstlisting}
-
+  
   Dans ce calcule, nous divisons par width ou height afin de passer à un repère (0,1), puis nous effectuons une 
   soustraction dans le but de se ramener à un repère (-0.5,0.5). Ce changement de repère nous permet de placer
   les basses fréquences au centre du graphique.
+  
+  La raie maximale de l'image se trouve au centre du plan de Fourier (coordonnées [0;0]). Elle représente la 
+  composante continue à la fréquence nulle qui est la moyenne de l'image. Cette composante est utilisée lors des
+  calculs de la transformée. Elle n'est pas significative des fréquences de l'image.
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{FFT256a.png}
+   \caption{Représentation déscripteurs de Fourier avec la raie maximale au centre}
+  \end{figure}
+
   
   \section{Second valeur maximale d'une image}
   
@@ -217,7 +218,13 @@
   \end{figure}
   
   Nous avons remarqué que si des images ont la même fréquence, mais avec une orientation de répétition de motif
-  différente alors ces images auront les mêmes maximales.
+  différente alors ces images auront les mêmes maximales.\\
+  
+  Nous avons également constaté que la transformée de l'image du damier de période deux pixels donne une transformée 
+  qui n'est pas totalement visible sur l'image retournée par Imagej. En effet, on retrouve un point dans les hautes 
+  fréquences, $f=\frac{1}{2}$, cependant on devrait retrouver trois autres points dans les coins de l'image. Cela est lié à la 
+  représentation de point au sens mathématique par des pixels. Les quatre points sont bien calculés, mais trois des pixels 
+  se retrouvent à l'extérieur du cadre.\\
   
   \begin{tabular}{|c|c|c|}
   \hline
@@ -229,82 +236,97 @@
   \hline
   256\_d & \includegraphics[width=5cm]{FFT256d.png} & 0,1016\\
   \hline
+  \shortstack{\includegraphics[width=3cm]{../gaetan/images/damier32x32.png} \\ damier 1 pixel} & \includegraphics[width=3cm]{FFTD32.png} & 0,1016\\
+  \hline
   \end{tabular}
   
   \section*{Conclusion}
   
+  Lors de ce TP, nous avons constaté qu'il était possible de représenter les fréquences d'une image grâce à la 
+  transformation de Fourier. Cette transformée permet de retrouver les directions et la période de motif au sein 
+  d'une image. La transformée de Fourier pourrait être utilisée pour détecter des textures qui se répètent dans une
+  image. Il est également possible de retrouver une image à partir de la transformée de Fourier.
   
   \newpage
-  \section*{Annexes}
+  \section*{Annexe}
   
   \begin{lstlisting}[caption=Macro complète du TP]
-  macro "direction FFT"
+macro "direction FFT"
 {
-    // ouverture d'une image si necessaire - sinon la macro analyse l'image courante
-    //open ("/home/bmathon/Enseignement/TI/tp6_TF/images/256_a.jpg");
+  // ouverture d'une image si necessaire - sinon la macro analyse l'image courante
+  //open ("/home/bmathon/Enseignement/TI/tp6_TF/images/256_a.jpg");
 
-    // recuperation de l'identifiant de l'image
-    image = getImageID();
+  // recuperation de l'identifiant de l'image
+  image = getImageID();
 
-    // application de la TDF (FFT : Fast Fourier Transform)
-    run("FFT");
+  // application de la TDF (FFT : Fast Fourier Transform)
+  run("FFT");
 
-    // recuperation de l'ID du module de la FFT
-    fourier = getImageID();
+  // recuperation de l'ID du module de la FFT
+  fourier = getImageID();
 
-    // recuperation de la taille W x H du module de la FFT
-    W = getWidth();
-    H = getHeight();
+  // recuperation de la taille W x H du module de la FFT
+  W = getWidth();
+  H = getHeight();
 
-    // recherche du max
-    max_1 = 0; 
-    i_max_1 = 0;
-    j_max_1 = 0;
-    max_2 = 0; 
-    i_max_2 = 0;
-    j_max_2 = 0;
+  // recherche du max
+  max_1 = 0; 
+  i_max_1 = 0;
+  j_max_1 = 0;
 
-    
-    for (j=0; j<H; j++)
+  max_2 = 0; 
+  i_max_2 = 0;
+  j_max_2 = 0;
+
+  for (j=0; j<H; j++)
+  {
+    for (i=0; i<W; i++) 
     {
-        for (i=0; i<W; i++) 
-        {
-            p = getPixel(i,j);
-            if ( max_1 < p)
-            {
-                max_2 = max_1;
-                i_max_2 = i_max_1;
-                j_max_2 = j_max_1;
-                max_1 =p;
-                i_max_1 = i;
-                j_max_1 = j;
-            } 
-        }
+      p = getPixel(i,j);
+      if ( max_1 < p)
+      {
+        max_2 = max_1;
+        i_max_2 = i_max_1;
+        j_max_2 = j_max_1;
+
+        max_1 = p;
+        i_max_1 = i;
+        j_max_1 = j;
+      } 
     }
+  }
 
-    // mise a zero de la valeur max
+  // mise a zero de la valeur max
 
-    setPixel (i_max_1,j_max_1,0);
-    setPixel (i_max_2, j_max_2,0);
+  setPixel (i_max_1,j_max_1,0);
 
-    print("x1 = " + i_max_1 + " y1 = " + j_max_1);
-    print("x2 = " + i_max_2 + " y2 = " + j_max_2);
-    print("plan de Fourier");
-    fourrierX2 = i_max_2 / W - 0.5;
-    fourrierY2 = (j_max_2 / H - 0.5) * (-1);
-    print("x2 = " + fourrierX2 + " y2 = " + fourrierY2);
+  print("Max 1: " + getFourierCoordinateAsString(i_max_1, j_max_1, W, H));
+  print("Max 2: " + getFourierCoordinateAsString(i_max_2, j_max_2, W, H));
 
-    if((fourrierX2*fourrierX2) - (fourrierY2*fourrierY2) != 0) {
-        if(fourrierY2 != 0) {
-            print("horizontal");
-        } else {
-            print("vertical");
-        }
-    } else {
-        print("diagonal");
-    }
+  if(fourierXCoordinate(i_max_2,W)==0){
+    print("Horizontal"); 
+  } else if(fourierYCoordinate(j_max_2,H)==0){
+    print("Vertical");
+  } else {
+    print("Diagonal");
+  }
+
 }
 
+function fourierXCoordinate(imgXCoordinate, width) {
+  return (imgXCoordinate/width) - 0.5;
+}
+
+function fourierYCoordinate(imgYCoordinate, height) {
+  return ((imgYCoordinate/height) - 0.5) * -1;
+}
+
+function getFourierCoordinateAsString(imgXCoordinate, imgYCoordinate, width, height) {
+  fourierX = fourierXCoordinate(imgXCoordinate, width);
+  fourierY = fourierYCoordinate(imgYCoordinate, height);
+  text = "[x:" + fourierX + ", y:" + fourierY + "]";
+  return text;
+}
   \end{lstlisting}
   
 \end{document}  
