@@ -136,17 +136,17 @@
   d'extraire différentes caractéristiques d'une image.
   
   \section{Fréquence spatiale}
-  Lors de ce TP, nous avons travaillé avec des images composées de raillure afin de pouvoir
+  Lors de ce TP, nous avons travaillé avec des images composées de rayures afin de pouvoir
   facilement travailler sur les fréquences d'une image.\\
   
-  Dans un premier temps nous avons calculé la période des images, c'est à dire le nombre de fois 
-  qu'un motif se répète. Nous avons trouvé, pour les image \enquote{*\_a.jpg}, une période de 5 pixels pour toute les images. En effet,
-  ces images change de dimension, mais la période du motif ne change pas. Cela nous donne donc
+  Dans un premier temps, nous avons calculé la période des images, c'est à dire le nombre de fois 
+  qu'un motif se répète. Nous avons trouvé, pour les images \enquote{*\_a.jpg}, une période de 5 pixels pour toutes les images. En effet,
+  ces images changent de dimension, mais la période du motif ne change pas. Cela nous donne donc
   une fréquence spatiale de $\frac{1}{5}$.
   
   \section{Raie maximale d'une image}
   
-  Nous avons abord changé le plan de cette image pour que les descripteurs soit compris entre -0,5
+  Nous avons d'abord changé le plan de cette image pour que les descripteurs soient compris entre -0,5
   et 0,5 afin de se border aux fréquences maximales d'une image. Pour cela, nous avons appliqué la 
   macro suivante sur chaque point du graphique.
   
@@ -160,7 +160,7 @@
   }
   \end{lstlisting}
   
-  Dans ce calcule, nous divisons par width ou height afin de passer à un repère (0,1), puis nous effectuons une 
+  Dans ce calcul, nous divisons par width ou height afin de passer à un repère (0,1), puis nous effectuons une 
   soustraction dans le but de se ramener à un repère (-0.5,0.5). Ce changement de repère nous permet de placer
   les basses fréquences au centre du graphique.
   
@@ -175,10 +175,10 @@
   \end{figure}
 
   
-  \section{Second valeur maximale d'une image}
+  \section{Seconde valeur maximale d'une image}
   
-  Nous avons ensuite recherché la second valeur maximale de l'image grâce la macro suivante :
-  \begin{lstlisting}[caption=Fonctions de passage aux coordonnées dans le plan de Fourier]
+  Nous avons ensuite recherché la seconde valeur maximale de l'image grâce à la macro suivante :
+  \begin{lstlisting}[caption=Fonctions de recherche des deux maximales]
   for (j=0; j<H; j++)
     {
         for (i=0; i<W; i++) 
@@ -197,18 +197,13 @@
     }
   \end{lstlisting}
   
-  %TODO ajout -> précise la fréquence
   Cette seconde valeur va nous fournir deux informations :
   \begin{itemize}
    \item La fréquence du motif
    \item l'orientation des motifs de l'image : la droite passant
-  par les deux valeurs maximales est perpendiculaire au motif. Ce qui signifie que si la droite est horizontal
-  alors les motifs de l'image se répète verticalement.
+  par les deux valeurs maximales est perpendiculaire au motif, ce qui signifie que si la droite est horizontale
+  alors les motifs de l'image se répètent verticalement.
   \end{itemize}
-
-  Cette second valeur va nous permettre de déterminer l'orientation des motifs de l'image. La droite passant
-  par les deux valeurs maximales est perpendiculaire au motif. Ce qui signifie que si la droite est horizontal
-  alors les motifs de l'image se répète verticalement.
   
   \begin{figure}[H]
   \center
@@ -223,7 +218,7 @@
   Nous avons également constaté que la transformée de l'image du damier de période deux pixels donne une transformée 
   qui n'est pas totalement visible sur l'image retournée par Imagej. En effet, on retrouve un point dans les hautes 
   fréquences, $f=\frac{1}{2}$, cependant on devrait retrouver trois autres points dans les coins de l'image. Cela est lié à la 
-  représentation de point au sens mathématique par des pixels. Les quatre points sont bien calculés, mais trois des pixels 
+  représentation de points au sens mathématique par des pixels. Les quatre points sont bien calculés, mais trois des pixels 
   se retrouvent à l'extérieur du cadre.\\
   
   \begin{tabular}{|c|c|c|}
