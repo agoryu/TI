@@ -133,19 +133,19 @@
   \section*{Introduction}
   Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon diffèrentes conditions. 
   Ce phénomène est appelé le phénomène de Moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
-  comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.
+  comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.\\
  
   \section{Étude des fréquences}
   Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une grande fréquence, 
   l’image \textit{1024\_moire\_f2} avec une une fréquence inférieur à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
   $f1$ et $f2$. Nous pouvons obtenir l’image \textit{1024\_moire} dans le menu Process $\rightarrow$ Image Calculator\ldots grâce à l’opération 
-  \textbf{Add} sur l’image $f1$ et $f2$.
+  \textbf{Add} sur l’image $f1$ et $f2$.\\
 
   \begin{figure}[H]
-   \center
-   \includegraphics[width=4cm]{../1024_moire_f1.png}
-   \includegraphics[width=4cm]{../1024_moire_f2.png}
-   \includegraphics[width=4cm]{../1024_moire.png}
+   \centering
+   \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f1.png} \\ {\small1024\_moire\_f1.png}}
+   \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f2.png} \\ {\small1024\_moire\_f2.png}}
+   \shortstack{\includegraphics[width=4.5cm]{../1024_moire.png} \\ {\small1024\_moire.png}}
    \caption{Image présentent pour le TP}
   \end{figure}
 
@@ -153,7 +153,7 @@
   donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquence de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
   qui a pour centre le centre du plan de Fourier. Nous remarquons également que la transformée de l’image \textit{1024\_moire} correspond aux maximums  
   des transformée de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
-  sur les transformées de $f1$ et $f2$.
+  sur les transformées de $f1$ et $f2$.\\
   
   \section{Théorème Shannon}
   Le théorème de Shanon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
@@ -164,9 +164,10 @@
   En revanche, quand nous effectuons un échantillonage d’un facteur 1/8\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
   d’avantage en diminuant la taille de l’image. Donc à partir d’un certain seuil, le théorème de Shannon n’est plus respecté. 
   Si on a $2*f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
-
+% Si on a $f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $2*f1$, soit $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
+  
   \begin{figure}[H]
-   \center
+   \centering
    \includegraphics[width=4cm]{../128_moire.png}
    \caption{Effet de Moiré}
   \end{figure}
@@ -176,7 +177,7 @@
   puisqu’il y a une seul fréquence d’échantillonage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de Moiré.\\
 
   Le repliement de spectre est un phénomène qui introduit des fréquence inexistante dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
-  Le problème survient lorsque la fréquence maximal d’un motif est atteinte, soit $\frac{1}{2}$.
+  Le problème survient lorsque la fréquence maximal d’un motif est atteinte, soit $\frac{1}{2}$.\\
 
   \section{Solution au phénomène de Moiré}
   
