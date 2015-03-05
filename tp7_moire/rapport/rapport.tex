@@ -1,0 +1,185 @@
+% --------------------------------------
+% Document Class
+% --------------------------------------
+\documentclass[a4paper,11pt]{article}
+% --------------------------------------
+
+
+
+% --------------------------------------
+% Use Package
+% --------------------------------------
+
+
+\usepackage[francais]{babel}
+%\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{makeidx}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref} 
+\usepackage{geometry}
+%\usepackage{lastpage}
+%\usepackage{marginnote}
+\usepackage{fancyhdr}
+%\usepackage{titlesec}
+%\usepackage{framed}
+\usepackage{amsmath}
+\usepackage{empheq}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{csquotes}
+%\usepackage{adjustbox}
+
+% insert code
+\usepackage{listings}
+
+% define our color
+\usepackage{xcolor}
+
+% code color
+\definecolor{ligthyellow}{RGB}{250,247,220}
+\definecolor{darkblue}{RGB}{5,10,85}
+\definecolor{ligthblue}{RGB}{1,147,128}
+\definecolor{darkgreen}{RGB}{8,120,51}
+\definecolor{darkred}{RGB}{160,0,0}
+
+% other color
+\definecolor{ivi}{RGB}{141,107,185}
+
+
+\lstset{
+    language=Scilab,
+    captionpos=b,
+    extendedchars=true,
+    frame=lines,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    keepspaces=true,
+    breaklines=true,
+    showspaces=false,
+    showstringspaces=false,
+    breakatwhitespace=false,
+    stepnumber=1,
+    showtabs=false,
+    tabsize=3,
+    basicstyle=\small\ttfamily,
+    backgroundcolor=\color{ligthyellow},
+    keywordstyle=\color{ligthblue},
+    morekeywords={include, printf, uchar},
+    identifierstyle=\color{darkblue},
+    commentstyle=\color{darkgreen},
+    stringstyle=\color{darkred},
+}
+
+
+% --------------------------------------
+
+
+
+% --------------------------------------
+% Page setting
+% --------------------------------------
+%\pagestyle{empty}
+\setlength{\headheight}{15pt}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\makeatletter
+\@addtoreset{chapter}{part}
+\makeatother 
+
+\hypersetup{         % parametrage des hyperliens
+  colorlinks=true,      % colorise les liens
+  breaklinks=true,      % permet les retours à la ligne pour les liens trop longs
+  urlcolor= blue,       % couleur des hyperliens
+  linkcolor= black,     % couleur des liens internes aux documents (index, figures, tableaux, equations,...)
+  citecolor= green      % couleur des liens vers les references bibliographiques
+}
+
+% --------------------------------------
+
+% --------------------------------------
+% Information
+% --------------------------------------
+\title{Compte-rendu TP7 TI : Atténuation du phénomène de moiré}
+\author{Elliot VANEGUE et Gaëtan DEFLANDRE}
+% --------------------------------------
+
+\definecolor{myColor}{rgb}{0.5, 0.1, 0.75}
+
+% --------------------------------------
+% Begin content
+% --------------------------------------
+\begin{document}
+
+% Set language to english
+  \selectlanguage{francais}
+
+  % Start the page counting
+  \pagenumbering{arabic}
+
+  \maketitle
+  
+  \mbox{}
+  \newpage
+  \clearpage
+  
+  \section*{Introduction}
+  Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon diffèrentes conditions. 
+  Ce phénomène est appelé le phénomène de Moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
+  comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.
+ 
+  \section{Étude des fréquences}
+  Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une grande fréquence, 
+  l’image \textit{1024\_moire\_f2} avec une une fréquence inférieur à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
+  $f1$ et $f2$. Nous pouvons obtenir l’image \textit{1024\_moire} dans le menu Process $\rightarrow$ Image Calculator\ldots grâce à l’opération 
+  \textbf{Add} sur l’image $f1$ et $f2$.
+
+  \begin{figure}[H]
+   \center
+   \includegraphics[width=4cm]{../1024_moire_f1.png}
+   \includegraphics[width=4cm]{../1024_moire_f2.png}
+   \includegraphics[width=4cm]{../1024_moire.png}
+   \caption{Image présentent pour le TP}
+  \end{figure}
+
+  La période spaciale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
+  donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquence de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
+  qui a pour centre le centre du plan de Fourier. Nous remarquons également que la transformée de l’image \textit{1024\_moire} correspond aux maximums  
+  des transformée de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
+  sur les transformées de $f1$ et $f2$.
+  
+  \section{Théorème Shannon}
+  Le théorème de Shanon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
+  supérieure au double de la fréquence maximale présente dans ce signal.}. Lorsque nous réduisons la taille de l’image et que nous la divisons par deux, les fréquences 
+  présentent dans l’image sont multiplié par deux, car le nombre de pixels entre deux motif est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
+  de Moiré visible sur l’image. Donc l’échantillonage respecte le théorème de Shannon.\\
+  
+  En revanche, quand nous effectuons un échantillonage d’un facteur 1/8\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
+  d’avantage en diminuant la taille de l’image. Donc à partir d’un certain seuil, le théorème de Shannon n’est plus respecté. 
+  Si on a $2*f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
+
+  \begin{figure}[H]
+   \center
+   \includegraphics[width=4cm]{../128_moire.png}
+   \caption{Effet de Moiré}
+  \end{figure}
+
+
+  On voit que parmis les deux fréquences présentent dans l’image, seul la fréquence la plus grande subit l’effet de Moiré. Cela paraît logique avec le thèorème de Shannon, 
+  puisqu’il y a une seul fréquence d’échantillonage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de Moiré.\\
+
+  Le repliement de spectre est un phénomène qui introduit des fréquence inexistante dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
+  Le problème survient lorsque la fréquence maximal d’un motif est atteinte, soit $\frac{1}{2}$.
+
+  \section{Solution au phénomène de Moiré}
+  
+  \section{Conclusion}
+  
+\end{document}  
