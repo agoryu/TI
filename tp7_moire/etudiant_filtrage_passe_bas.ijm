@@ -9,7 +9,7 @@
  
 macro "filtrage passe-basFFT" {
 
-    run("FFT", "title='FFT du moire'f");
+    run("FFT");
     // recuperation de ID de la FFT
     fourier = getImageID();
 
@@ -17,12 +17,12 @@ macro "filtrage passe-basFFT" {
     W = getWidth();
     H = getHeight();
 
-    // creation d'un masque binaire
 
-    // fond noir
+    // Creation d'un masque binaire
 
     newImage("masque", "8-bit", W, H, 1);
     masque = getImageID();
+    // fond noir
     setColor(0);
     makeRectangle (0,0, W,H);
     fill();
@@ -31,38 +31,27 @@ macro "filtrage passe-basFFT" {
 
     // calcul du rayon du disque binaire à partir de la frequence de coupure fc
     // attention, la FFT etant consideree comme une image par ImageJ, le rayon doit etre calcule en pixels
-
     rayon = H * fc;
 
     print("rayon =", rayon);
+
     setColor(255);
     makeOval (W/2-rayon,H/2-rayon, 2*rayon,2*rayon);
     fill ();
 
+
     // Filtrage passe-bas
 
-    // fourer AND masque
-    for (y=0; y<H; y++) {
+    selectImage(fourier);
+    makeOval(W/2-rayon,H/2-rayon, 2*rayon,2*rayon);
+    setColor(0);
+    // Selection inverse du cercle
+    run("Make Inverse");
+    fill();
 
-        for (x=0; x<W; x++) {
-            
-            selectImage (masque);
-            p = getPixel(x,y);
 
-            if ( p==0 ) {
-                selectImage (fourier);
-                setPixel(x,y,0);
-            }
-        }
-    }
-
-    selectImage (fourier);
     // Transformee de fourier inverse pour fournir l'image filtree
 
     run("Inverse FFT");
-
-    image_filtree = getImageID();
-    //selectImage(image_filtree);
-    selectImage(masque);
 }
 
