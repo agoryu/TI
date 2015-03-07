@@ -181,10 +181,78 @@
 
   \section{Solution au phénomène de Moiré}
   
-  Pour remédier au phénomène de Moiré, nous avons atténué les basses fréquences de l'image. Avec cette méthode quelque soit la fréquence
-  d'échantillonage, les basses fréquences en dessous d'un certain seuil seront supprimé. Nous avons pris comme seuil 0,05 ....
-  %pourquoi 0,05 si la limite c'est 1/5 on aurait du prendre 0,2
+  Pour remédier au phénomène de Moiré, nous avons atténué les basses fréquences de l'image. C'est à dire qu'on a pris un
+  seuil sur les descripteur de Fourier et qu'au delà de ce seuil nous avons supprimé toutes les fréquences. Dans une image
+  ce procédé va flouter une image. Dans notre cas, les plus petites rayure, donc celle dont la fréquence est la plus grande,
+  vont être supprimé. Ainsi lorsque nous allons changer la fréquence d'échantillonage de l'image, nous n'aurons plus de phénomène
+  de Moiré puisque ce phénomène était lié au plus haute fréquence.\\
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{../FFT_1024_moire.png}
+   \caption{Transformée de Fourier avec filtre passe-bas}
+  \end{figure}
+  
+  Pour ce cas d'étude, nous avons pris un seuil de 0.05, car ce seuil ce trouve entre les deux fréquences de l'image et donc 
+  élimine seulement la plus grande.
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{../1024_moire_hf.png}
+   \caption{Résultat du filtre passe-bas}
+  \end{figure}
   
   \section{Conclusion}
+  Durant ce TP, nous avons vu que les fréquences dans une image peuvent jouer un rôle important. Elles peuvent
+  accentué le bruit de l'image et provoquer des repliement de spectre. Les filtres passe-bas peuvent s'avérer
+  particulièrement utile dans ce genre de situation. Il peuvent permettre d'atténuer du bruit, mais cela peut
+  provoquer une perte d'information non négligealble sur un signal.
   
+  \newpage
+  \section{Annexes}
+  \begin{lstlisting}[caption=Macro d'atténuation du phénomène de Moiré]
+macro "filtrage passe-basFFT" {
+
+    run("FFT");
+    // recuperation de ID de la FFT
+    fourier = getImageID();
+
+    // recuperation de la taille W x H du plan de Fourier
+    W = getWidth();
+    H = getHeight();
+
+    // Creation d'un masque binaire
+    newImage("masque", "8-bit", W, H, 1);
+    masque = getImageID();
+    // fond noir
+    setColor(0);
+    makeRectangle (0,0, W,H);
+    fill();
+
+    fc = 0.05;
+
+    // calcul du rayon du disque binaire à partir de la frequence de coupure fc
+    // attention, la FFT etant consideree comme une image par ImageJ, le rayon doit etre calcule en pixels
+    rayon = H * fc;
+    print("rayon =", rayon);
+
+    setColor(255);
+    makeOval (W/2-rayon,H/2-rayon, 2*rayon,2*rayon);
+    fill ();
+
+
+    // Filtrage passe-bas
+    selectImage(fourier);
+    makeOval(W/2-rayon,H/2-rayon, 2*rayon,2*rayon);
+    setColor(0);
+    // Selection inverse du cercle
+    run("Make Inverse");
+    fill();
+
+    // Transformee de fourier inverse pour fournir l'image filtree
+    run("Inverse FFT");
+}
+  \end{lstlisting}
+
+
 \end{document}  
