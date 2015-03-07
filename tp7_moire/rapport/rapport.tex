@@ -133,7 +133,7 @@
   \section*{Introduction}
   Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon différentes conditions. 
   Ce phénomène est appelé le phénomène de moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
-  comprendre et de trouver une solution pour éviter ce phénomène quelle que soit l’image.\\
+  comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.\\
  
   \section{Étude des fréquences}
   Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une fréquence élevée, 
@@ -146,7 +146,7 @@
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f1.png} \\ {\small1024\_moire\_f1.png}}
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f2.png} \\ {\small1024\_moire\_f2.png}}
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire.png} \\ {\small1024\_moire.png}}
-   \caption{Image présentent pour le TP}
+   \caption{Images présentes pour le TP}
   \end{figure}
 
   La période spatiale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
@@ -160,7 +160,7 @@
   supérieure au double de la fréquence maximale présente dans ce signal.}. Lorsque nous réduisons la taille de l’image et que nous la divisons par deux, les fréquences 
   présentes dans l’image sont multipliées par deux, car le nombre de pixels entre deux motifs est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
   de moiré visible sur l’image. Donc l’échantillonnage respecte le théorème de Shannon.\\
-  
+
   En revanche, quand nous effectuons un échantillonnage d’un facteur $\frac{1}{8}$\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
   d’avantage en diminuant la taille de l’image. Donc à partir d’un certain seuil, le théorème de Shannon n’est plus respecté. 
 %  Si on a $2*f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
@@ -172,11 +172,13 @@
    \caption{Effet de moiré}
   \end{figure}
 
+  On voit que parmi les deux fréquences présentes dans l’image, seule la fréquence 
+  la plus grande subit l’effet de moiré. Cela paraît logique avec le thèorème de Shannon, 
+  puisqu’il y a une seule fréquence d’échantillonnage et deux fréquences dans l’image, 
+  donc ce sera toujours la fréquence la plus grande qui subira, en premier, l’effet de moiré.\\
 
-  On voit que parmi les deux fréquences présentent dans l’image, seule la fréquence la plus grande subit l’effet de moiré. Cela paraît logique avec le théorème de Shannon, 
-  puisqu’il y a une seule fréquence d’échantillonnage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de moiré.\\
-
-  Le repliement de spectre est un phénomène qui introduit des fréquences inexistantes dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
+  Le repliement de spectre est un phénomène qui introduit des fréquences inexistantes dans 
+  un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
   Le problème survient lorsque la fréquence maximale d’un motif est atteinte, soit $\frac{1}{2}$.\\
 
   \newpage
@@ -232,6 +234,7 @@
   particulièrement utiles dans ce genre de situation. Ils peuvent permettre d'atténuer 
   les hautes fréquences, mais cela peut provoquer une perte d'information non 
   négligeable sur un signal.\\
+
   
   \newpage
   \section{Annexes}
