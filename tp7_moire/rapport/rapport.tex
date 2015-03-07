@@ -107,7 +107,7 @@
 % --------------------------------------
 % Information
 % --------------------------------------
-\title{Compte-rendu TP7 TI : Atténuation du phénomène de Moiré}
+\title{Compte-rendu TP7 TI : Atténuation du phénomène de moiré}
 \author{Elliot VANEGUE et Gaëtan DEFLANDRE}
 % --------------------------------------
 
@@ -131,13 +131,13 @@
   \clearpage
   
   \section*{Introduction}
-  Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon diffèrentes conditions. 
-  Ce phénomène est appelé le phénomène de Moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
-  comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.\\
+  Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon différentes conditions. 
+  Ce phénomène est appelé le phénomène de moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
+  comprendre et de trouver une solution pour éviter ce phénomène quelle que soit l’image.\\
  
   \section{Étude des fréquences}
-  Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une grande fréquence, 
-  l’image \textit{1024\_moire\_f2} avec une une fréquence inférieur à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
+  Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une fréquence élevée, 
+  l’image \textit{1024\_moire\_f2} avec une fréquence inférieure à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
   $f1$ et $f2$. Nous pouvons obtenir l’image \textit{1024\_moire} dans le menu Process $\rightarrow$ Image Calculator\ldots grâce à l’opération 
   \textbf{Add} sur l’image $f1$ et $f2$.\\
 
@@ -149,68 +149,93 @@
    \caption{Image présentent pour le TP}
   \end{figure}
 
-  La période spaciale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
-  donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquence de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
+  La période spatiale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
+  donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquences de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
   qui a pour centre le centre du plan de Fourier. Nous remarquons également que la transformée de l’image \textit{1024\_moire} correspond aux maximums  
-  des transformée de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
+  des transformées de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
   sur les transformées de $f1$ et $f2$.\\
   
   \section{Théorème Shannon}
-  Le théorème de Shanon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
+  Le théorème de Shannon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
   supérieure au double de la fréquence maximale présente dans ce signal.}. Lorsque nous réduisons la taille de l’image et que nous la divisons par deux, les fréquences 
-  présentent dans l’image sont multiplié par deux, car le nombre de pixels entre deux motif est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
-  de Moiré visible sur l’image. Donc l’échantillonage respecte le théorème de Shannon.\\
+  présentes dans l’image sont multipliées par deux, car le nombre de pixels entre deux motifs est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
+  de moiré visible sur l’image. Donc l’échantillonnage respecte le théorème de Shannon.\\
   
-  En revanche, quand nous effectuons un échantillonage d’un facteur 1/8\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
+  En revanche, quand nous effectuons un échantillonnage d’un facteur $\frac{1}{8}$\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
   d’avantage en diminuant la taille de l’image. Donc à partir d’un certain seuil, le théorème de Shannon n’est plus respecté. 
-  Si on a $2*f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
-% Si on a $f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $2*f1$, soit $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
+%  Si on a $2*f_1=\frac{1}{10}$ alors la fréquence d'échantillonage maximum est $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < <fréquence échantillonage>.\\
+  Si on a $f_1=\frac{1}{10}$ alors la fréquence d'échantillonnage maximum est de $2*f1$, soit $\frac{1}{5}$, car par la suite nous aurons $2*f_1$ < $frequence\ echantillonnage$.\\
   
   \begin{figure}[H]
    \centering
    \includegraphics[width=4cm]{../128_moire.png}
-   \caption{Effet de Moiré}
+   \caption{Effet de moiré}
   \end{figure}
 
 
-  On voit que parmis les deux fréquences présentent dans l’image, seul la fréquence la plus grande subit l’effet de Moiré. Cela paraît logique avec le thèorème de Shannon, 
-  puisqu’il y a une seul fréquence d’échantillonage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de Moiré.\\
+  On voit que parmi les deux fréquences présentent dans l’image, seule la fréquence la plus grande subit l’effet de moiré. Cela paraît logique avec le théorème de Shannon, 
+  puisqu’il y a une seule fréquence d’échantillonnage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de moiré.\\
 
-  Le repliement de spectre est un phénomène qui introduit des fréquence inexistante dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
-  Le problème survient lorsque la fréquence maximal d’un motif est atteinte, soit $\frac{1}{2}$.\\
+  Le repliement de spectre est un phénomène qui introduit des fréquences inexistantes dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
+  Le problème survient lorsque la fréquence maximale d’un motif est atteinte, soit $\frac{1}{2}$.\\
 
-  \section{Solution au phénomène de Moiré}
+  \newpage
   
-  Pour remédier au phénomène de Moiré, nous avons atténué les basses fréquences de l'image. C'est à dire qu'on a pris un
-  seuil sur les descripteur de Fourier et qu'au delà de ce seuil nous avons supprimé toutes les fréquences. Dans une image
-  ce procédé va flouter une image. Dans notre cas, les plus petites rayure, donc celle dont la fréquence est la plus grande,
-  vont être supprimé. Ainsi lorsque nous allons changer la fréquence d'échantillonage de l'image, nous n'aurons plus de phénomène
-  de Moiré puisque ce phénomène était lié au plus haute fréquence.\\
+  \section{Solution au phénomène de moiré}
+  
+  Pour remédier au phénomène de moiré, nous allons supprimer les hautes fréquences 
+  de l'image. Pour cela, nous prenons une fréquence limite et nous ne conservons 
+  que les fréquences inférieures à cette limite. Cette fréquence limite est 
+  appelée fréquence de coupure. Dans une image ce procédé va flouter l'image. 
+  Dans notre cas, les plus petites rayures, donc celle dont la fréquence est la plus grande,
+  vont être supprimées. Ainsi lorsque nous allons sous-échantillonner l'image, nous n'aurons plus de phénomène
+  de moiré lié aux petites rayures. Si nous sous-échantillonnons avec un très grand facteur, alors le phénomène 
+  de moiré serait de nouveau visible pour les rayures $f2$.\\
   
   \begin{figure}[H]
-  \center
+  \centering
    \includegraphics[width=5cm]{../FFT_1024_moire.png}
    \caption{Transformée de Fourier avec filtre passe-bas}
   \end{figure}
   
-  Pour ce cas d'étude, nous avons pris un seuil de 0.05, car ce seuil ce trouve entre les deux fréquences de l'image et donc 
-  élimine seulement la plus grande.
+  Pour ce cas d'étude, une fréquence de coupure de 0.05 est suffisamment petite 
+  pour éviter le phénomène de moiré pour un sous-échantillonnage de facteur 8. 
+  En effet, cette fréquence se trouve entre les deux fréquences de $f1$ et $f2$, donc 
+  elle élimine seulement la fréquence $f1$, la plus grande.\\
   
   \begin{figure}[H]
-  \center
+  \centering
    \includegraphics[width=5cm]{../1024_moire_hf.png}
    \caption{Résultat du filtre passe-bas}
   \end{figure}
   
-  \section{Conclusion}
-  Durant ce TP, nous avons vu que les fréquences dans une image peuvent jouer un rôle important. Elles peuvent
-  accentué le bruit de l'image et provoquer des repliement de spectre. Les filtres passe-bas peuvent s'avérer
-  particulièrement utile dans ce genre de situation. Il peuvent permettre d'atténuer du bruit, mais cela peut
-  provoquer une perte d'information non négligealble sur un signal.
+  Après application de la macro, nous retrouvons une image ressemblante à l'image 
+  \textit{1024\_moire\_f2}. Cela est tout à fait normal étant donné que nous avons 
+  retiré certaines fréquences à l'image \textit{1024\_moire} dont la fréquence $f1$.\\
+  
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=9cm]{../1024_moire_sub.png}
+    \caption{Histogramme de l'erreur}
+  \end{figure}
+  
+  Nous remarquons que l'histogramme d'erreur est gris sombre, ce qui nous montre une 
+  petite différence sur la moyenne des gris des deux images. Cependant, cet histogramme 
+  est pratiquement unicolore, sans grande variation de gris dans l'histogramme, nous 
+  permettant de dire que les deux images sont similaires, mise à part la différence de 
+  moyenne, constaté auparavant.\\
+  
+  \section*{Conclusion}
+  Durant ce TP, nous avons vu que les fréquences dans une image peuvent jouer un rôle important. 
+  Sans prendre en compte ces fréquentes, un sous-échantillonnage trop important peut 
+  provoquer des repliements de spectre. Les filtres passe-bas peuvent s'avérer
+  particulièrement utiles dans ce genre de situation. Ils peuvent permettre d'atténuer 
+  les hautes fréquences, mais cela peut provoquer une perte d'information non 
+  négligeable sur un signal.\\
   
   \newpage
   \section{Annexes}
-  \begin{lstlisting}[caption=Macro d'atténuation du phénomène de Moiré]
+  \begin{lstlisting}[caption=Macro d'atténuation du phénomène de moiré]
 macro "filtrage passe-basFFT" {
 
     run("FFT");
