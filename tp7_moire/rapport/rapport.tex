@@ -131,13 +131,13 @@
   \clearpage
   
   \section*{Introduction}
-  Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon diffèrentes conditions. 
+  Pour certaines répétitions de motifs dans une image, nous pouvons observer un phénomène qui déforme ce motif, selon différentes conditions. 
   Ce phénomène est appelé le phénomène de Moiré. Il se produit lorsque la fréquence d’un motif est trop grande. Le but de ce TP va être de 
   comprendre et de trouver une solution pour éviter ce phénomène quelque soit l’image.\\
  
   \section{Étude des fréquences}
   Pour l’étude du phénomène de moiré, nous disposons de trois images (cf Figure 1). L’image \textit{1024\_moire\_f1} avec une grande fréquence, 
-  l’image \textit{1024\_moire\_f2} avec une une fréquence inférieur à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
+  l’image \textit{1024\_moire\_f2} avec une une fréquence inférieure à l’image $f1$ et l’image \textit{1024\_moire} qui est l’addition des images 
   $f1$ et $f2$. Nous pouvons obtenir l’image \textit{1024\_moire} dans le menu Process $\rightarrow$ Image Calculator\ldots grâce à l’opération 
   \textbf{Add} sur l’image $f1$ et $f2$.\\
 
@@ -146,19 +146,19 @@
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f1.png} \\ {\small1024\_moire\_f1.png}}
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire_f2.png} \\ {\small1024\_moire\_f2.png}}
    \shortstack{\includegraphics[width=4.5cm]{../1024_moire.png} \\ {\small1024\_moire.png}}
-   \caption{Image présentent pour le TP}
+   \caption{Images présentes pour le TP}
   \end{figure}
 
-  La période spaciale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
-  donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquence de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
+  La période spatiale de l’image $f1$ est de 10 pixels, ce qui donne une fréquence de $\frac{1}{10}$. Pour l’image $f2$, la période est de 100 pixels, 
+  donc la fréquence est de $\frac{1}{100}$. Nous pouvons retrouver les fréquences de ces images dans le plan de Fourier, c’est la taille du rayon du cercle 
   qui a pour centre le centre du plan de Fourier. Nous remarquons également que la transformée de l’image \textit{1024\_moire} correspond aux maximums  
-  des transformée de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
+  des transformées de Fourier des images $f1$ et $f2$, que nous pouvons obtenir grâce à l’opérateur \textbf{Max} du menu Process $\rightarrow$ Image Calculator, 
   sur les transformées de $f1$ et $f2$.\\
   
-  \section{Théorème Shannon}
-  Le théorème de Shanon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
+  \section{Théorème de Shannon}
+  Le théorème de Shannon nous dit que : \enquote{La représentation discrète d'un signal par des échantillons régulièrement espacés exige une fréquence d'échantillonnage 
   supérieure au double de la fréquence maximale présente dans ce signal.}. Lorsque nous réduisons la taille de l’image et que nous la divisons par deux, les fréquences 
-  présentent dans l’image sont multiplié par deux, car le nombre de pixels entre deux motif est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
+  présentes dans l’image sont multipliées par deux, car le nombre de pixels entre deux motifs est divisé par deux. L’image résultante au changement d’échelle n’a aucun effet 
   de Moiré visible sur l’image. Donc l’échantillonage respecte le théorème de Shannon.\\
   
   En revanche, quand nous effectuons un échantillonage d’un facteur 1/8\up{ème}, nous pouvons observer une légère déformation des motifs de l’image. Cela s’accentue 
@@ -173,19 +173,19 @@
   \end{figure}
 
 
-  On voit que parmis les deux fréquences présentent dans l’image, seul la fréquence la plus grande subit l’effet de Moiré. Cela paraît logique avec le thèorème de Shannon, 
-  puisqu’il y a une seul fréquence d’échantillonage et deux fréquences dans l’image, donc se sera toujours la fréquence la plus grande qui subira, en premier, l’effet de Moiré.\\
+  On voit que parmi les deux fréquences présentes dans l’image, seule la fréquence la plus grande subit l’effet de Moiré. Cela paraît logique avec le thèorème de Shannon, 
+  puisqu’il y a une seule fréquence d’échantillonage et deux fréquences dans l’image, donc ce sera toujours la fréquence la plus grande qui subira, en premier, l’effet de Moiré.\\
 
-  Le repliement de spectre est un phénomène qui introduit des fréquence inexistante dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
-  Le problème survient lorsque la fréquence maximal d’un motif est atteinte, soit $\frac{1}{2}$.\\
+  Le repliement de spectre est un phénomène qui introduit des fréquences inexistantes dans un signal, dans notre cas cela se produit lorsque le théorème de Shannon n’est pas respecté.
+  Le problème survient lorsque la fréquence maximale d’un motif est atteinte, soit $\frac{1}{2}$.\\
 
   \section{Solution au phénomène de Moiré}
   
   Pour remédier au phénomène de Moiré, nous avons atténué les basses fréquences de l'image. C'est à dire qu'on a pris un
-  seuil sur les descripteur de Fourier et qu'au delà de ce seuil nous avons supprimé toutes les fréquences. Dans une image
-  ce procédé va flouter une image. Dans notre cas, les plus petites rayure, donc celle dont la fréquence est la plus grande,
-  vont être supprimé. Ainsi lorsque nous allons changer la fréquence d'échantillonage de l'image, nous n'aurons plus de phénomène
-  de Moiré puisque ce phénomène était lié au plus haute fréquence.\\
+  seuil sur les descripteurs de Fourier et qu'au delà de ce seuil, nous avons supprimé toutes les fréquences. Dans une image,
+  ce procédé va la flouter. Dans notre cas, les plus petites rayures, donc celles dont la fréquence est la plus grande,
+  vont être supprimées. Ainsi lorsque nous allons changer la fréquence d'échantillonage de l'image, nous n'aurons plus de phénomènes
+  de Moiré puisque ce phénomène était lié aux plus hautes fréquences.\\
   
   \begin{figure}[H]
   \center
@@ -193,7 +193,7 @@
    \caption{Transformée de Fourier avec filtre passe-bas}
   \end{figure}
   
-  Pour ce cas d'étude, nous avons pris un seuil de 0.05, car ce seuil ce trouve entre les deux fréquences de l'image et donc 
+  Pour ce cas d'étude, nous avons pris un seuil de 0.05, car ce seuil se trouve entre les deux fréquences de l'image et donc 
   élimine seulement la plus grande.
   
   \begin{figure}[H]
@@ -204,9 +204,9 @@
   
   \section{Conclusion}
   Durant ce TP, nous avons vu que les fréquences dans une image peuvent jouer un rôle important. Elles peuvent
-  accentué le bruit de l'image et provoquer des repliement de spectre. Les filtres passe-bas peuvent s'avérer
-  particulièrement utile dans ce genre de situation. Il peuvent permettre d'atténuer du bruit, mais cela peut
-  provoquer une perte d'information non négligealble sur un signal.
+  accentuer le bruit de l'image et provoquer des repliements de spectre. Les filtres passe-bas peuvent s'avérer
+  particulièrement utiles dans ce genre de situation. Il peuvent permettre d'atténuer du bruit, mais cela peut
+  provoquer une perte d'information non négligeable sur un signal.
   
   \newpage
   \section{Annexes}
