@@ -137,6 +137,7 @@
   
   \section{Seuillage de la norme d'un gradient}
   
+  \subsection{Calcul de la norme d'un gradient par convolution}
   Nous avons dans un premier temps calculé les dérivées partielle de la fonction image dans 
   les directions horizontal et vertical. Pour cela, nous appliquons les filtres de Sobel
   $\begin{pmatrix}
@@ -165,12 +166,28 @@
 
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../norme8.png}
+   \includegraphics[width=5cm]{../norme32.png}
    \caption{Norme de l'image}
   \end{figure}
   
   On voit que la norme fait bien ressortir les contours, mais certain d'entre eux sont incomplet
   ou à l'inverse trop épais. Quand on regarde l'histogramme de l'image on voit que le minimum est 0
-  et le maximum est 904.
+  et le maximum est 904 pour l'image 32 bits. Pour calculer la norme de l'image nous utilisons 
+  la formule : $\sqrt{pX^2 + pY^2}$, ce qui explique la valeur assez importante du maximum. De plus,
+  l'image ne comporte pas de pixel noir, car cette image comporte des valeurs négatives qui ont 
+  été supprimé avec le carré des de la valeur des pixels.\\
   
+  Pour obtenir le même résultat que la fonction qui calcul la norme dans ImageJ, il faut passer 
+  l'image 32 bits en image 8 bits.\\
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{../norme8.png}
+   \caption{Norme de l'image transformé en image 8 bits}
+  \end{figure}
+  
+  Le résultat que nous obtenons est identique au résultat de la fonction d'ImageJ, car nous obtenons
+  une image noire lorsque nous faisons la soustraction de notre résultat et celui d'ImgaJ.
+  
+  \subsection{Seuillage de la norme du gradient précédemment calculée}
 \end{document}  
