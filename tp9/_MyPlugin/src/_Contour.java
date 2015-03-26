@@ -8,8 +8,8 @@ import java.util.List;
 
 public class _Contour implements PlugInFilter {
 
-	private int seuilBas = 85;
-	private int seuilHaut = 90;
+	private int seuilBas = 95;
+	private int seuilHaut = 105;
 
 	public int setup(String arg, ImagePlus imp) {
 		return PlugInFilter.DOES_8G;
