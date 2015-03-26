@@ -307,7 +307,11 @@ private void propaRec(final ImageProcessor imNormeG,
   \end{figure}
   
   \section{Conclusion}
-  La detection de contour 
+  Les dérivées d'images sont efficaces pour la détections des contours dans une image, mais ces méthodes 
+  extraient également beaucoup de bruit de l'image, qui n'est pas désirable. Pour diminuer ce bruit, des méthodes
+  exsitent en utilisent la norme et le gradiants des pixels de l'image. Ensuite, différentes manières pour 
+  binsariser les contours sont possibles, avec certaines statistiques tel l'histogramme cumulé ou en encore 
+  le seuillage proposé par Canny, par hystérésis.
   
   
   \newpage
