@@ -60,52 +60,31 @@ run("8-bit");
 
 for(i=0; i<H; i++) {
     for(j=0; j<W; j++) {
-        selectImage("norme");
-        if(getPixel(j, i) <= 80) {
-
-            selectImage("newNorme");
-            setPixel(j, i, 0);
+        
+        selectImage("newNorme");
+        pixel = getPixel(j, i); 
+        if(angle == 0 || angle == 180) {
+            if(pixel >= getPixel(j-1, i) && pixel >= getPixel(j+1, i)) {
+                setPixel(j-1, i, 0);
+                setPixel(j+1, i, 0);
+            }
+        } else if(angle == 90) {
+            if(pixel >= getPixel(j, i+1) && pixel >= getPixel(j, i-1)) {
+                setPixel(j, i-1, 0);
+                setPixel(j, i+1, 0);
+            }
+        } else if(angle == 45) {
+            if(pixel >= getPixel(j+1, i+1) && pixel >= getPixel(j-1, i-1)) {
+                setPixel(j+1, i+1, 0);
+                setPixel(j-1, i-1, 0);
+            }
         } else {
-            selectImage("newNorme");
-            setPixel(j, i, 255);
-            if(angle == 0 || angle == 180) {
-                //setPixel(j-1, i, 255);
-                //setPixel(j+1, i, 255);
-                setPixel(j+1, i+1, 0);
-                setPixel(j, i+1, 0);
+            if(pixel >= getPixel(j-1, i+1) && pixel >= getPixel(j+1, i-1)) {
                 setPixel(j-1, i+1, 0);
-                setPixel(j-1, i-1, 0);
-                setPixel(j, i-1, 0);
                 setPixel(j+1, i-1, 0);
-            } else if(angle == 90) {
-                setPixel(j-1, i, 0);
-                setPixel(j+1, i, 0);
-                setPixel(j+1, i+1, 0);
-                //setPixel(j, i+1, 0);
-                setPixel(j-1, i+1, 0);
-                setPixel(j-1, i-1, 0);
-                //setPixel(j, i-1, 0);
-                setPixel(j+1, i-1, 0); 
-            } else if(angle == 45) {
-                setPixel(j-1, i, 0);
-                setPixel(j+1, i, 0);
-                //setPixel(j+1, i+1, 0);
-                setPixel(j, i+1, 0);
-                setPixel(j-1, i+1, 0);
-                //setPixel(j-1, i-1, 0);
-                setPixel(j, i-1, 0);
-                setPixel(j+1, i-1, 0); 
-            } else {
-                setPixel(j-1, i, 0);
-                setPixel(j+1, i, 0);
-                setPixel(j+1, i+1, 0);
-                setPixel(j, i+1, 0);
-                //setPixel(j-1, i+1, 0);
-                setPixel(j-1, i-1, 0);
-                setPixel(j, i-1, 0);
-                //setPixel(j+1, i-1, 0);
             }
         }
+
     }
 }
 
