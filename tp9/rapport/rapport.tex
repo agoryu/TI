@@ -155,8 +155,8 @@
   
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../lighthouse_8bits_grad_x.png}
-   \includegraphics[width=5cm]{../lighthouse_8bits_grad_y.png}
+   \includegraphics[width=4cm]{../lighthouse_8bits_grad_x.png}
+   \includegraphics[width=4cm]{../lighthouse_8bits_grad_y.png}
    \caption{Images avec les contours horizontal et vertical}
   \end{figure}
 
@@ -166,7 +166,7 @@
 
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../norme32.png}
+   \includegraphics[width=4cm]{../norme32.png}
    \caption{Norme de l'image}
   \end{figure}
   
@@ -182,7 +182,7 @@
   
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../norme8.png}
+   \includegraphics[width=4cm]{../norme8.png}
    \caption{Norme de l'image transformé en image 8 bits}
   \end{figure}
   
@@ -196,7 +196,7 @@
   
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../binAuto.png}
+   \includegraphics[width=4cm]{../binAuto.png}
    \caption{Binarisation automatique de l'image}
   \end{figure}
   
@@ -207,8 +207,8 @@
   
   \begin{figure}[H]
   \center
-   \includegraphics[width=5cm]{../bin50.png}
-   \includegraphics[width=5cm]{../bin140.png}
+   \includegraphics[width=4cm]{../bin50.png}
+   \includegraphics[width=4cm]{../bin140.png}
    \caption{Binarisation de l'image avec le seuil 50 puis 140}
   \end{figure}
   
@@ -224,4 +224,18 @@
   \end{figure}
   
   \section{Détection des maxima locaux de la norme d'un gradient}
+  Pour réaliser une détection des maxima locaux, nous avons besoin de calculer l'angle des gradients
+  de l'image. Pour cela nous utilisons la formule suivante sur chacun des pixels : \\
+  $$angle = atan2(pY, pX)/3.14*180$$
+  
+  Grâce à cet angle nous pouvons vérifier la valeur des deux pixels voisin qui le suive et si ces pixels
+  voisin ont une valeurs plus petite que le pixel traité, alors celui-ci appartient à un contour.
+  Dans ce cas on passe les voisins à 0.\\
+  
+  %mettre l'image à gaetan
+  
+  Nous pouvons voir qu'avec cette méthode les contours sont plus fin, il ne sont composé que de un pixel
+  en largeur. En revanche, cet algorithme ne supprime pas de bruit, il ne fait qu'intensifier les contours.
+  
+  \section{Seuillage des maxima locaux par hystérésis}
 \end{document}  
