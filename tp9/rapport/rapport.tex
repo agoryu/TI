@@ -190,4 +190,38 @@
   une image noire lorsque nous faisons la soustraction de notre résultat et celui d'ImgaJ.
   
   \subsection{Seuillage de la norme du gradient précédemment calculée}
+  Grâce à l'outil ImgaeJ, nous seuillons l'image que nous avons calculer précédemment afin de la binariser.
+  Nous utilisons dans un premier temps le seuillage automatique. On voit que le seuillage n'est pas excellent,
+  car l'herbe est encore fort présente dans l'image et il reste quelque pixel blanc dans l'image.\\
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{../binAuto.png}
+   \caption{Binarisation automatique de l'image}
+  \end{figure}
+  
+  Si nous diminuons ce seuil, le nombre de pixel blanc dans la pelouse et dans le ciel augmente. Et si
+  nous augmentons le seuil, nous diminuons les pixels blanc dans les zone cité précédemment, mais nous
+  perdons certains contours du phare et de la maison. Finalement, nous déterminons que le seuil le plus 
+  approprié doit se trouver entre 80 et 120.\\
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=5cm]{../bin50.png}
+   \includegraphics[width=5cm]{../bin140.png}
+   \caption{Binarisation de l'image avec le seuil 50 puis 140}
+  \end{figure}
+  
+  Afin d'affiner la détermination du seuil, nous calculons l'histogramme cumulé de l'image qui à chaque valeur
+  de pixel ajoute la somme des valeurs des pixel précédent. A partir de cet histogramme, nous allons prendre
+  comme seuil le pixel à partir du quel l'histogramme commence à se stabiliser. Nous allons donc prendre le pixel
+  qui est à peu près à 20\% de l'histogramme, soit le pixel 100.
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=10cm]{../histoCumul.png}
+   \caption{Histogramme cumulé de l'image}
+  \end{figure}
+  
+  \section{Détection des maxima locaux de la norme d'un gradient}
 \end{document}  
