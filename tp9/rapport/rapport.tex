@@ -132,14 +132,14 @@
   
   \section*{Introduction}
   Lors de ce TP, nous allons chercher à déterminer les contours d'une image grâce aux 
-  gradients de ses pixels. Ces gradients porte de nombreuse information qui peuvent
-  être déterminé grâce à l'algorithme de Sobel, qui calcul le vecteur des gradients.
+  gradients de ses pixels. Ces gradients portent de nombreuses informations qui peuvent
+  être déterminé grâce à l'algorithme de Sobel, qui calcule le vecteur des gradients.
   
   \section{Seuillage de la norme d'un gradient}
   
   \subsection{Calcul de la norme d'un gradient par convolution}
-  Nous avons dans un premier temps calculé les dérivées partielle de la fonction image dans 
-  les directions horizontal et vertical. Pour cela, nous appliquons les filtres de Sobel
+  Nous avons dans un premier temps calculé les dérivées partielles de la fonction image dans les directions horizontales 
+  et verticales. Pour cela, nous appliquons les filtres de Sobel
   $\begin{pmatrix}
      -1 & 0 & 1 \\
      -2 & 0 & 2 \\
@@ -150,8 +150,8 @@
      0 & 0 & 0 \\
      1 & 2 & 1
   \end{pmatrix}$
-  Afin de calculer le gradient de chaque pixel dans la direction x et y.
-  Nous obtenons ainsi une image avec les contours dont la direction est horizontal et une seconde avec les contours vertical.\\
+  afin de calculer le gradient de chaque pixel dans la direction x et y.
+  Nous obtenons ainsi une image avec les contours dont la direction des pixels est horizontale et une seconde dont la direction est verticale.\\
   
   \begin{figure}[H]
   \center
@@ -160,9 +160,10 @@
    \caption{Images avec les contours horizontal et vertical}
   \end{figure}
 
-  On voit sur ces deux images que les contours détecté par chaque filtre ne sont pas les mêmes
-  à cause de leur direction. Grâce au valeur des pixels de ces deux images, nous calculons la norme
-  des gradiants dans une nouvelle image, ce qui fera ressortir des contours de l'image.
+  On voit sur ces deux images que les contours détectés par chaque filtre ne sont pas les mêmes
+  à cause de leur direction. Grâce aux valeurs des pixels de ces deux images, nous calculons la norme
+  des gradients dans une nouvelle image, ce qui fera ressortir les deux types de contours calculés précédemment
+  sur celle-ci.
 
   \begin{figure}[H]
   \center
@@ -170,15 +171,17 @@
    \caption{Norme de l'image}
   \end{figure}
   
-  On voit que la norme fait bien ressortir les contours, mais certain d'entre eux sont incomplet
-  ou à l'inverse trop épais. Quand on regarde l'histogramme de l'image on voit que le minimum est 0
-  et le maximum est 904 pour l'image 32 bits. Pour calculer la norme de l'image nous utilisons 
-  la formule : $\sqrt{pX^2 + pY^2}$, ce qui explique la valeur assez importante du maximum. De plus,
-  l'image ne comporte pas de pixel noir, car cette image comporte des valeurs négatives qui ont 
-  été supprimé avec le carré des de la valeur des pixels.\\
-  
-  Pour obtenir le même résultat que la fonction qui calcul la norme dans ImageJ, il faut passer 
-  l'image 32 bits en image 8 bits.\\
+  On voit que la norme fait bien ressortir les contours, mais certains d'entre eux sont incomplets
+  ou à l'inverse trop épais.\\
+
+  Quand on regarde l'histogramme de l'image on voit que la valeur minimum des pixels est 0
+  et le maximum est 904 pour l'image 32 bits. Pour calculer la norme de l'image nous utilisons
+  la formule : $\sqrt{pX^2 + pY^2}$, ce qui explique la valeur assez importante du maximum. De plus
+  l'image ne comporte pas de pixel noir, car les pixels gris foncé et noire sont dans les valeurs négatives
+  que nous avons supprimées en faisant le carré de chaque pixel.\\
+
+  Pour obtenir le même résultat que la fonction qui calcule la norme dans ImageJ, il faut passer
+  l'image 32 bits en image 8 bits afin de passer d'un ensemble [-904;904] à un ensemble [0;255].\\
   
   \begin{figure}[H]
   \center
@@ -190,9 +193,9 @@
   une image noire lorsque nous faisons la soustraction de notre résultat et celui d'ImgaJ.
   
   \subsection{Seuillage de la norme du gradient précédemment calculée}
-  Grâce à l'outil ImgaeJ, nous seuillons l'image que nous avons calculer précédemment afin de la binariser.
-  Nous utilisons dans un premier temps le seuillage automatique. On voit que le seuillage n'est pas excellent,
-  car l'herbe est encore fort présente dans l'image et il reste quelque pixel blanc dans l'image.\\
+  Grâce à l'outil ImgaeJ, nous seuillons l'image que nous avons calculée précédemment afin de la binariser.
+  Nous utilisons dans un premier temps le seuillage automatique. On voit que le seuillage n'est pas très bon,
+  car il y a encore beaucoup d'herbe visible dans l'image et il reste quelque pixel blanc dans l'image au niveau du ciel.\\
   
   \begin{figure}[H]
   \center
@@ -200,9 +203,8 @@
    \caption{Binarisation automatique de l'image}
   \end{figure}
   
-  Si nous diminuons ce seuil, le nombre de pixel blanc dans la pelouse et dans le ciel augmente. Et si
-  nous augmentons le seuil, nous diminuons les pixels blanc dans les zone cité précédemment, mais nous
-  perdons certains contours du phare et de la maison. Finalement, nous déterminons que le seuil le plus 
+  Si nous diminuons ce seuil, le nombre de pixels blancs dans la pelouse et dans le ciel augmente. Et si
+  nous augmentons le seuil, nous perdons certains contours du phare et de la maison. Finalement, nous déterminons que le seuil le plus 
   approprié doit se trouver entre 80 et 120.\\
   
   \begin{figure}[H]
@@ -212,10 +214,10 @@
    \caption{Binarisation de l'image avec le seuil 50 puis 140}
   \end{figure}
   
-  Afin d'affiner la détermination du seuil, nous calculons l'histogramme cumulé de l'image qui à chaque valeur
-  de pixel ajoute la somme des valeurs des pixel précédent. A partir de cet histogramme, nous allons prendre
-  comme seuil le pixel à partir du quel l'histogramme commence à se stabiliser. Nous allons donc prendre le pixel
-  qui est à peu près à 20\% de l'histogramme, soit le pixel 100.
+  Afin d'affiner la détermination du seuil, nous calculons l'histogramme cumulé de l'image qui pour chaque valeur 
+  de pixel ajoute la somme des valeurs des pixels précédents. A partir de cet histogramme, nous allons prendre comme 
+  seuil le pixel à partir du quel l'histogramme commence à se stabiliser. Nous prenons donc le pixel qui est à peu près 
+  à 20\% de l'histogramme, qui est le pixel 100.\\
   
   \begin{figure}[H]
   \center
@@ -225,11 +227,11 @@
   
   \section{Détection des maxima locaux de la norme d'un gradient}
   Pour réaliser une détection des maxima locaux, nous avons besoin de calculer l'angle des gradients
-  de l'image. Pour cela nous utilisons la formule suivante sur chacun des pixels : \\
+  de l'image. Pour cela nous utilisons la formule suivante sur chacun des pixels :
   $$angle = atan2(pY, pX)/3.14*180$$
   
-  Grâce à cet angle nous pouvons vérifier la valeur des deux pixels voisin qui le suive et si ces pixels
-  voisin ont une valeurs plus petite que le pixel traité, alors celui-ci appartient à un contour.
+  Grâce à cet angle nous pouvons vérifier la valeur des deux pixels voisins qui le suive et si ces pixels
+  voisins ont une valeur plus petite que le pixel traité, alors celui-ci appartient à un contour.
   Dans ce cas on passe les voisins à 0.\\
   
   \begin{figure}[H]
@@ -238,29 +240,33 @@
    \caption{Les maxima locaux de l'image}
   \end{figure}
   
-  Nous pouvons voir qu'avec cette méthode les contours sont plus fin, il ne sont composé que de un pixel
-  en largeur. En revanche, cet algorithme ne supprime pas de bruit, il ne fait qu'intensifier les contours.
+  Nous pouvons voir qu'avec cette méthode les contours sont plus fins, ils ne sont composés que d'un pixel en largeur. 
+  En revanche, cet algorithme ne supprime pas de bruit, il ne fait que diminuer la taille des contours.
   
   \section{Seuillage des maxima locaux par hystérésis}
   
   Maintenant que nous disposons des maxima locaux extrait à partir des normes et des gradients, nous 
-  pouvons encore améliorer les résultats seuillage par hystérésis. Ce seuillage consiste à prendre 
+  pouvons encore améliorer les résultats avec un seuillage par hystérésis. Ce seuillage consiste à prendre 
   deux seuil, avec un premier passage:
   \begin{itemize}
    \item pour le seuil haut: les maxima supérieurs à ce seuil sont considéré comme pixels contours.
    \item pour le seuil bas: les maxima inférieurs à ce seuil sont directement rejeté.
   \end{itemize}
   
-  Ensuite, pour les valeurs entre les deux seuils, un second passage est nécessaire. Pour chaque 
-  pixel situé rendre les deux seuils, si ces voisins sont au dessus du seuil haut alors il est 
-  considéré il aussi comme contours sinon il est rejeté.\\
-  
-  Ce principe a été développé par J. F. Canny et est implémenté dans certaines bibliothèques de 
-  traitement d'images tel que OpenCV.\\
-  
-  Pour développer cette fonctionnalité, nous créons un plugin ImageJ en java. Pour cela, il faut 
-  implémenté l'interface \textit{PlugInFilter} de l'API ImageJ, puis nous manipulons ensuite nos 
-  images avec les objets propres a l'API d'ImageJ.\\
+%   Ensuite, pour les valeurs entre les deux seuils, un second passage est nécessaire. Pour chaque 
+%   pixel situé rendre les deux seuils, si ces voisins sont au dessus du seuil haut alors ils sont eux aussi 
+%   considéré comme contours sinon il est rejeté.\\
+  Ensuite, pour les valeurs entre les deux seuils, un second passage est nécessaire. Pour chaque
+  pixel situé au-dessus du seuil haut nous vérifions si l'un de ses voisins fait partie des pixels entre les deux seuilles.
+  Si c'est le cas, le pixel trouvé fait partie lui aussi du contour et on passe sa valeur à 255. On répète cette opération
+  jusqu'à ce qu'il n'y est plus de pixels dont la valeur est différente de 0 ou 255.\\
+
+  Ce principe a été développé par J. F. Canny et est implémenté dans certaines bibliothèques de
+  traitement d'images telles que OpenCV.\\
+
+  Pour développer cette fonctionnalité, nous créons un plugin ImageJ en java. Pour cela, il faut
+  implémenter l'interface \textit{PlugInFilter} de l'API ImageJ, puis nous manipulons ensuite nos
+  images avec les objets propres à l'API d'ImageJ.\\
  
   \begin{lstlisting}[caption=Fonction qui va déterminer si les contours entre les deux seuils sont corrects]
 private void propaRec(final ImageProcessor imNormeG,
@@ -295,7 +301,7 @@ private void propaRec(final ImageProcessor imNormeG,
 }
   \end{lstlisting}
   
-  Le code documenté du plugin est présent en anexe.\\
+  Le code documenté du plugin est présent en annexe.\\
 
   Voici le résultat du plugin, en itératif, nous retrouvons une image binaire où les nuages ne sont 
   plus présents.\\
@@ -307,7 +313,7 @@ private void propaRec(final ImageProcessor imNormeG,
   \end{figure}
   
   \section{Conclusion}
-  Les dérivées d'images sont efficaces pour la détections des contours dans une image, mais ces méthodes 
+  Les dérivées d'images sont efficaces pour la détections des contours, mais ces méthodes 
   extraient également beaucoup de bruit de l'image, qui n'est pas désirable. Pour diminuer ce bruit, des méthodes
   exsitent en utilisent la norme et le gradiants des pixels de l'image. Ensuite, différentes manières pour 
   binsariser les contours sont possibles, avec certaines statistiques tel l'histogramme cumulé ou en encore 
