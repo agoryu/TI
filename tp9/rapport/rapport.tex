@@ -228,7 +228,7 @@
   \section{Détection des maxima locaux de la norme d'un gradient}
   Pour réaliser une détection des maxima locaux, nous avons besoin de calculer l'angle des gradients
   de l'image. Pour cela nous utilisons la formule suivante sur chacun des pixels :
-  $$angle = atan2(pY, pX)/3.14*180$$
+  $$angle = atan2(pY, pX)/\pi*180$$
   
   Grâce à cet angle nous pouvons vérifier la valeur des deux pixels voisins qui le suive et si ces pixels
   voisins ont une valeur plus petite que le pixel traité, alors celui-ci appartient à un contour.
@@ -309,7 +309,7 @@ private void propaRec(final ImageProcessor imNormeG,
   \begin{figure}[H]
   \center
    \includegraphics[width=7cm]{../canny_ite.png}
-   \caption{Histogramme cumulé de l'image}
+   \caption{Résultat du seuillage des maxima par hystérésis}
   \end{figure}
   
   \section{Conclusion}
