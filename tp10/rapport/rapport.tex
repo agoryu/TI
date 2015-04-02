@@ -165,6 +165,8 @@
    \caption{Mise en évidence des pixels mis à zéro par le Laplacien}
   \end{figure}
 
+  Nous constatons que la valeur zéro n'est pas présente dans l'histogramme de l'image, nous avons donc pris 
+  un minimum négatif proche de 0 et un maximum positif proche de 0.
   On voit clairement qu'une approche du second ordre fait ressortire les contours, mais également beaucoup de bruit. 
   Pour minimiser ce problème nous allons effectuer un seuillage des passages par zéro du Laplacien.
   
@@ -211,5 +213,7 @@
   \end{tabular}
   \end{center}
   
-  Nous allons maintenant utiliser la norme du gradient pour seuiller l'image que nous avons calculer.
+  Nous allons maintenant utiliser la norme du gradient pour seuiller l'image que nous avons calculer. Pour cela nous avons besoin
+  de calculer la norme du gradient de l'image, puis nous appliquons au résultat un masquage avec l'image calculé précédemment.
+  Enfin nous seuillons à nouveau l'image, ce qui nous donne un résultat avec l'ensemble des contours et très peu de bruit.
 \end{document}  
