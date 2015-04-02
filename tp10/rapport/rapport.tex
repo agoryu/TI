@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 % --------------------------------------
 % Document Class
 % --------------------------------------
@@ -143,15 +142,15 @@
   voyons qu'il fait plus ou moins ressortir les contours de l'image.\\
   
   \begin{center}
-  \begin{tabular}{|c|c|}
+  \begin{tabular}{| >{\centering\arraybackslash}m{1.5in} |  >{\centering\arraybackslash}m{1.5in} |}
    \hline
-   masque appliqué & résultat\\
+   Masque appliqué & Résultat\\
    \hline
-   $\begin{pmatrix} 0 & 1 & 0\\ 1 & -4 & 1\\ 0 & 1 & 0 \end{pmatrix}$ & \includegraphics[width=3cm]{../convolution0.png}\\
+   $\begin{pmatrix} 0 & 1 & 0\\ 1 & -4 & 1\\ 0 & 1 & 0 \end{pmatrix}$ & \shortstack{\\ \includegraphics[width=3cm]{../convolution0.png}}\\
    \hline
-   $\begin{pmatrix} 1 & 0 & 1\\ 0 & -4 & 0\\ 1 & 0 & 1 \end{pmatrix}$ & \includegraphics[width=3cm]{../convolution1.png}\\
+   $\begin{pmatrix} 1 & 0 & 1\\ 0 & -4 & 0\\ 1 & 0 & 1 \end{pmatrix}$ & \shortstack{\\ \includegraphics[width=3cm]{../convolution1.png}}\\
    \hline
-   $\begin{pmatrix} 1 & 4 & 1\\ 4 & -20 & 4\\ 1 & 4 & 1 \end{pmatrix}$ & \includegraphics[width=3cm]{../convolution4.png}\\
+   $\begin{pmatrix} 1 & 4 & 1\\ 4 & -20 & 4\\ 1 & 4 & 1 \end{pmatrix}$ & \shortstack{\\ \includegraphics[width=3cm]{../convolution4.png}}\\
    \hline
   \end{tabular}
   \end{center}
@@ -190,11 +189,27 @@
   
   \section{Utilisation du filtre LoG et détection multi-échelles}
   Le filtre LoG va permettre de lisser l'image avec un noyau gaussien dont l'écart type de la courbe gaussienne est défini par
-  sigma. Pour que ce masque soit efficace il faut que sa taille soit adapté au sigma et que cette taille soit impaire. Nous prenons
-  donc comme taille de masque $7*sigma$.\\
-  %TODO
-  %Nous pouvons alors calculer le seuil avec la formule
-  %TODO voir approche multi echelle
+  sigma. Pour que ce masque soit efficace il faut que sa taille soit adapté au sigma. En effet, avec un sigma trop grand et 
+  une taille de masque trop petite, nous aurions que partie du masque LoG, deplus la plus des coefficient du masque ne serait 
+  plus égale à zéro. Ensuite, il faut s'assurer que cette taille soit impaire, pour garantir un pixel au centre du masque.
+  Nous prenons donc comme taille de masque $7*sigma$.\\
+
+  Nous avons ensuite changé la méthode qui détermine les passages par zéro pour la détection multi-échelles. En effet, 
+  l'ancienne méthode générait des épais. Certains traits de contour se chevauchaient lorsque le sigma était petit. 
+  
+  \begin{center}
+  \begin{tabular}{| >{\centering\arraybackslash}m{1.5in} |  >{\centering\arraybackslash}m{1.5in} |  >{\centering\arraybackslash}m{1.5in} |}
+   \hline
+   Valeur de $\sigma$ & Ancien méthodes & Détection multi-échelles\\
+   \hline
+   $ \sigma=1.4 $ & \shortstack{\\ \includegraphics[width=3cm]{../convolution0.png}} & \shortstack{\\ \includegraphics[width=3cm]{../convolution0.png}}\\
+   \hline
+   $ \sigma=2.2 $ & \shortstack{\\ \includegraphics[width=3cm]{../convolution1.png}} & \shortstack{\\ \includegraphics[width=3cm]{../convolution0.png}}\\
+   \hline
+   $ \sigma=3 $ & \shortstack{\\ \includegraphics[width=3cm]{../convolution4.png}} & \shortstack{\\ \includegraphics[width=3cm]{../convolution0.png}}\\
+   \hline
+  \end{tabular}
+  \end{center}
   
   Nous allons maintenant utiliser la norme du gradient pour seuiller l'image que nous avons calculer.
 \end{document}  
