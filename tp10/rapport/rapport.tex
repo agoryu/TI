@@ -132,13 +132,13 @@
   
   \section{Introduction}
    Lors du TP précédent, nous avons pu voir la détection de contours par approche du premier ordre. Nous avons
-   calculé la dérivé de l'image afin de récupérer la norme et la direction du gradient de chaque pixel. Dans ce TP
+   calculé la dérivé de l'image afin de récupérer la norme et la direction du gradient de chaque pixel. Dans ce TP,
    nous allons utiliser une approche du second ordre avec le calcul du Laplacien, puis nous effectuerons un seuillage
    des passages par zéro.
 
   \section{Calcul du Laplacien}
   Nous allons dans un premier temps appliquer un masque de convolution. Ce masque est un masque normalisé
-  qui est le résultat de la dérivé second directionnelle. Lorsque nous l'appliquons à l'image des spores, nous
+  qui est le résultat de la dérivé seconde directionnelle. Lorsque nous l'appliquons à l'image des spores, nous
   voyons qu'il fait plus ou moins ressortir les contours de l'image.\\
   
   \begin{center}
@@ -155,7 +155,7 @@
   \end{tabular}
   \end{center}
 
-  Comme on peut le voir sur les résultats, plus le centre du masque est petit et plus les contours de l'image ressorte. 
+  Comme on peut le voir sur les résultats, plus le centre du masque est petit et plus les contours de l'image ressortent. 
   Cependant, le résultat n'en est pas forcément meilleur, car plus les contours sont visibles et plus du bruit apparaît.
   Cela se voit particulièrement bien lorsque nous mettons en évidence les pixels mis à zéro par le Laplacien.
   
@@ -167,17 +167,17 @@
 
   Nous constatons que la valeur zéro n'est pas présente dans l'histogramme de l'image, nous avons donc pris 
   un minimum négatif proche de 0 et un maximum positif proche de 0.
-  On voit clairement qu'une approche du second ordre fait ressortire les contours, mais également beaucoup de bruit. 
-  Pour minimiser ce problème nous allons effectuer un seuillage des passages par zéro du Laplacien.
+  On voit clairement qu'une approche du second ordre fait ressortir les contours, mais également beaucoup de bruit. 
+  Pour minimiser ce problème, nous allons effectuer un seuillage des passages par zéro du Laplacien.
   
   \section{Seuillage des passages par 0 du Laplacien}
   Pour effectuer ce seuillage, nous utilisons un seuil déterminé par l'utilisateur et l'image que nous avons
-  calculé grâce au masque du Laplacien. Pour déterminé si un pixel fait parti d'une contour nous parcourons l'ensemble de l'image 
+  calculée grâce au masque du Laplacien. Pour déterminer si un pixel fait partie d'un contour nous parcourons l'ensemble de l'image 
   et nous vérifions le voisinage de chaque pixel. Si le voisinage du pixel traité répond aux conditions suivantes : $max > seuil$ et $min < -seuil$
-  alors le pixel fait partie d'un contour. Cela permet d'éliminer les fréquences trop basse de l'image.\\ 
+  alors le pixel fait partie d'un contour. Cela permet d'éliminer les fréquences trop basses de l'image.\\ 
   
   Avec cette méthodologie, nous utilisons un seuil de 24 pour l'image des spores avec le premier masque du tableau précédent, ce qui nous donne un résultat relativement
-  satisfaisant. Au delà de ce seuil, les contours des spores sont de plus en plus imcomplet. Et en dessous de ce seuil, le bruit est
+  satisfaisant. Au delà de ce seuil, les contours des spores sont de plus en plus imcomplets. Et en dessous de ce seuil, le bruit est
   trop important.
   
   \begin{figure}[H]
@@ -187,20 +187,20 @@
   \end{figure}
   
   On ne peut donc pas obtenir des contours complets avec un minimum de bruit avec cette méthode. Pour résoudre ce problème
-  nous allons utilise le filtre LoG\footnote{Laplacian of Gaussian}.
+  nous allons utiliser le filtre LoG\footnote{Laplacian of Gaussian}.
   
   \section{Utilisation du filtre LoG et détection multi-échelles}
   Le filtre LoG va permettre de lisser l'image avec un noyau gaussien dont l'écart type de la courbe gaussienne est défini par
-  sigma. Pour que ce masque soit efficace il faut que sa taille soit adapté au sigma. En effet, avec un sigma trop grand et 
-  une taille de masque trop petite, nous aurions que partie du masque LoG, deplus la plus des coefficient du masque ne serait 
-  plus égale à zéro. Ensuite, il faut s'assurer que cette taille soit impaire, pour garantir un pixel au centre du masque.
+  sigma. Pour que ce masque soit efficace, il faut que sa taille soit adaptée au sigma. En effet, avec un sigma trop grand et 
+  une taille de masque trop petite, nous n'aurions qu'une partie du masque LoG, de plus, le total des coefficients du masque ne serait 
+  plus égal à zéro. Ensuite, il faut s'assurer que cette taille soit impaire, pour garantir un pixel au centre du masque.
   Nous prenons donc comme taille de masque $7*sigma$.\\
 
   Nous avons ensuite changé la méthode qui détermine les passages par zéro pour la détection multi-échelles. En effet, 
-  l'ancienne méthode générait des épais et certains traits de contour se chevauchaient lorsque le sigma était petit.
-  Cette effet est due au nombre de voisin considéré, dans l'ancienne méthode, nous retrouvons les passages par zéro 
-  avec huit voisins alors qu'avec la nouvelle méthode nous ne regardons plus que quatre pixels, ce qui réduit les 
-  cas de passage par zéro, cette solution est plus précise.\\
+  l'ancienne méthode générait des contours épais et certains traits de contour se chevauchaient lorsque le sigma était petit.
+  Cet effet est du au nombre de voisins considérés, dans l'ancienne méthode, nous retrouvons les passages par zéro 
+  avec huit voisins alors qu'avec la nouvelle méthode, nous ne regardons plus que quatre pixels. Ceci réduit les 
+  cas de passage par zéro, et donne une solution est plus précise.\\
   
   \begin{center}
     \begin{tabular}{| >{\centering\arraybackslash}m{1.5in} |  >{\centering\arraybackslash}m{1.5in} |  >{\centering\arraybackslash}m{1.5in} |}
@@ -217,10 +217,10 @@
   \end{center}
 
   
-  Les résultats du tableau, nous montre que la méthode du Laplacien est assez sensible au bruit. Nous remarquons aussi que 
+  Les résultats du tableau nous montrent que la méthode du Laplacien est assez sensible au bruit. Nous remarquons aussi que 
   les contours sont fermés.
   
-  Nous allons maintenant utiliser la norme du gradient pour seuiller l'image que nous avons calculer. Pour cela nous avons besoin
+  Nous allons maintenant utiliser la norme du gradient pour seuiller l'image que nous avons calculée. Pour cela nous avons besoin
   de calculer la norme du gradient de l'image, nous utilisons un plugin imagej pour l'obtenir.
   
   \begin{figure}[H]
@@ -229,30 +229,30 @@
    \includegraphics[width=4cm]{../norme.png}
    % TODO l'image juste apres le AND de la norme et du laplacien
    \includegraphics[width=4cm]{../mask_laplacien.png}
-   \caption{A gauche, la norme du gradient de l'image des spore. A droite, la norme aprés appliquation du masque}
+   \caption{A gauche, la norme du gradient de l'image des spores. A droite, la norme après application du masque}
   \end{figure}
   
-  Puis nous appliquons au résultat un masquage avec l'image des contours calculé précédemment. Enfin nous seuillons 
+  Puis nous appliquons au résultat un masquage avec l'image des contours calculés précédemment. Enfin nous seuillons 
   à nouveau l'image, ce qui nous donne un résultat avec l'ensemble des contours et très peu de bruit.
   
   \begin{figure}[H]
    \center
    \includegraphics[width=4cm]{../result_laplacien.png}
    \includegraphics[width=4cm]{../canny.png}
-   \caption{A gauche, l'image seuillée de norme masqué. A droite, l'image calculée par le plugin (Canny)}
+   \caption{A gauche, l'image seuillée de la norme masquée. A droite, l'image calculée par le plugin (Canny)}
   \end{figure}
   
   Nous remarquons que dans la dernière image calculée, nous retrouvons tous les contours des spores et peu 
   de buit, dans ce cas. Dans l'image du filtre de Canny, plus de contours sont trouvés, mais également plus 
-  de bruit. On pourrais ajusté les seuils pour atténuer cela.
+  de bruit. On pourrait ajuster les seuils pour atténuer cela.
   
   \section{Conclusion}
   La méthode du Laplacien permet de retrouver les contours par convolution, tel que Sobel. Dans le cas du Laplacien,
-  on ne cherche plus les maxima, les contours se trouve là où la dérivé seconde change de signe.\\
+  on ne cherche plus les maxima, les contours se trouvent là où la dérivé seconde change de signe.\\
   
-  Cette méthode est assez sensible au bruit, ce qui là rend moins populaire que l'opérateur de Canny. Le Laplacien 
+  Cette méthode est assez sensible au bruit, ce qui la rend moins populaire que l'opérateur de Canny. Le Laplacien 
   donne de bons résultats pour retrouver les contours fermés. Il est donc parfois efficace de combiner plusieurs
-  méthodes tel que la norme du gradient d'une image, calculé avec le filtre de Sobel, et la détection des contours
+  méthodes telles que la norme du gradient d'une image, calculée avec le filtre de Sobel, et la détection des contours
   avec la méthode Laplacienne dans cette image.
 
 \end{document}  
