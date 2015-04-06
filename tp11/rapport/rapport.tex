@@ -144,17 +144,52 @@
   a une valeur dans la composante bleu qui est plus importante que les deux premiers pixels. Donc la première configuration
   de Bayer utilisé sur notre image est la suivante : \\
   
-  %TODO mettre l'image de la configuration de Bayer commençant par le bleu
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=3cm]{bayerGRG.png}
+  \end{figure}
 
-  Nous allons maintenant simuler la génération d'une image CFA à partir de l'image couleur.
-  %TODO
+  Nous allons maintenant simuler la génération d'une image CFA à partir de l'image couleur. Pour
+  cela nous appelons la méthode \enquote{cfa} qui nous est fournit et nous stockons le résultat
+  dans un ImageProcessor que nous affichons. Nous obtenons ainsi une image CFA dont la configuration
+  est la suivante :
+  
+  \begin{figure}[H]
+  \center
+   \includegraphics[width=3cm]{bayerBGB.png}
+  \end{figure}
+  
+  Nous obtenons donc une image en dégradé de gris, car une image CFA ne comporte qu'un seul canal par pixel,
+  c'est après un dématriçage que l'image possèdera trois canaux représentant chaque composante couleur.
   
   \section{Dématriçage par interpolation bilinéaire}
-  Nous avons dans notre cours les trois formule de dématriçage suivante :
-  %TODO mettre les formules
+  Nous avons dans notre cours les quatre formules de dématriçage suivante :
   
-  Ces formule sont équivalente au masque 
-  %TODO mettre les masques
+  \begin{align}
+  B = \frac{1}{4} * (B_{-1,-1}+B_{1,-1}+B_{-1,1}+B_{1,1})\\
+  G = \frac{1}{4} * (G_{0,-1}+G_{-1,0}+G_{1,0}+G_{0,1})\\
+  R = \frac{1}{2} * (R_{-1,0}+R_{1,0})\\
+  B = \frac{1}{2} * (B_{0,-1}+B_{0,1})
+  \end{align}
   
-  %TODO tout faire en fait
+  Cela nous permet dans un premier temps de définir le masque de la composante G $\frac{1}{4}$
+  $\begin{pmatrix}
+   0 & 1 & 0\\
+   1 & 4 & 1\\
+   0 & 1 & 0
+  \end{pmatrix}$
+  puisque l'on peut voir dans l'équation de G qu'il a besoin de ses voisins du dessus, du dessous,
+  de gauche et de droite afin de calculer le pixel courant. Pour les composantes suivantes, le calcul
+  est un peu plus complexe, car leur équation varie en fonction de la configuration du CFA. Le masque
+  correspondant aux deux autres composantes est $\frac{1}{4}$
+  $\begin{pmatrix}
+   1 & 2 & 1\\
+   2 & 4 & 2\\
+   1 & 2 & 1
+  \end{pmatrix}$. Dans cette matrice, les valeurs en (1,0), (0,1), (-1,0) et (0,-1) sont à 2, car 
+  les équations 3 et 4 ont un coefficient non pas de $\frac{1}{4}$ mais de $\frac{1}{2}$, il faut
+  donc leur donner un poid deux plus important que le reste des voisins. Le reste des voisins n'ont 
+  qu'un poid de 1 dans le masque grâce à l'équation 1.
+ 
+  %TODO pas oublier de mettre le code
 \end{document}  
