@@ -131,18 +131,18 @@
   \clearpage
   
   \section{Introduction}
-  Avant de pouvoir traiter une image, il faut pouvoir l'acquérir au moyen de capteur présent dans les
-  caméra ou appareil photo par exemple. Dans nos appareils grand public, un capteur est composé d'une mosaîque
-  de pixel. Les pixels ne peuvent représenter qu'un seul dégradé de couleur. C'est pourquoi il existe différent
+  Avant de pouvoir traiter une image, il faut pouvoir l'acquérir au moyen d'un capteur présent dans les
+  caméras ou appareils photo par exemple. Dans nos appareils grand public, un capteur est composé d'une mosaîque
+  de pixels. Les pixels ne peuvent représenter qu'un seul dégradé de couleur. C'est pourquoi il existe différents
   CFA\footnote{Color Filter Array} qui permettent d'obtenir une image couleur. Durant ce TP, nous allons voir
   comment est utilisé le CFA de Bayer.
   
   \section{Interprétation et simulation d'une image CFA}
   Etant donné que nous travaillons sur une image acquise avec un CFA de Bayer, nous pouvons déterminer quelle est
   la disposition des pixels de l'image. Lorsque nous regardons le coin haut gauche, qui représente un ciel bleu, nous
-  constatons que le troisième pixel est plus claire que les deux premiers dans l'image CFA. Or le troisième pixel 
+  constatons que le troisième pixel est plus clair que les deux premiers dans l'image CFA. Or le troisième pixel 
   a une valeur dans la composante bleu qui est plus importante que les deux premiers pixels. Donc la première configuration
-  de Bayer utilisé sur notre image est la suivante : \\
+  de Bayer utilisée sur notre image est la suivante : \\
   
   \begin{figure}[H]
   \center
@@ -150,7 +150,7 @@
   \end{figure}
 
   Nous allons maintenant simuler la génération d'une image CFA à partir de l'image couleur. Pour
-  cela nous appelons la méthode \enquote{cfa} qui nous est fournit et nous stockons le résultat
+  cela nous appelons la méthode \enquote{cfa} qui nous est fournie et nous stockons le résultat
   dans un ImageProcessor que nous affichons. Nous obtenons ainsi une image CFA dont la configuration
   est la suivante :
   
@@ -165,7 +165,7 @@
   \section{Dématriçage par interpolation bilinéaire}
   
   Dans notre cas, nous traitons des images CFA dont la disposition est G-R-G. Il est donc possible de 
-  retrouver les pixels de chaque plan $\varphi^k$. Par exemple, on obtient pour le début du plan rouge 
+  retrouver les pixels de chaque plan $\varphi^k$. Par exemple, on obtient pour le début du plan rouge, 
   les pixels sur la dispositions suivante:
   
   \begin{figure}[H]
@@ -174,7 +174,7 @@
    \caption{Disposition des pixels rouges}
   \end{figure}
   
-  Nous avons dans notre cours les quatre formules de dématriçage suivante :\\
+  Nous avons dans notre cours les quatre formules de dématriçage suivantes :\\
   
   Configuration {GRG} (id. en {GBG}) :\\
   \begin{align}
@@ -188,8 +188,8 @@
   B &= \frac{1}{2} * (B_{0,-1}+B_{0,1})
   \end{align}
   
-  Nous pouvons alors déterminé les masques de convolution à appliquer sur le plan $\varphi^G$,
-  pour retrouver de la composante G, $\frac{1}{4}$
+  Nous pouvons alors déterminer les masques de convolution à appliquer sur le plan $\varphi^G$,
+  pour retrouver la composante G, $\frac{1}{4}$
   $\begin{pmatrix}
    0 & 1 & 0\\
    1 & 4 & 1\\
@@ -197,7 +197,7 @@
   \end{pmatrix}$
   puisque l'on peut voir dans l'équation de G qu'il a besoin de ses voisins du dessus, du dessous,
   de gauche et de droite afin de calculer le pixel courant. Pour les composantes suivantes, le calcul
-  est un peu plus complexe, car leur équation varie en fonction de la configuration du CFA. Le masque
+  est un peu plus complexe, car leurs équations varient en fonction de la configuration du CFA. Le masque
   correspondant aux deux autres composantes est $\frac{1}{4}$
   $\begin{pmatrix}
    1 & 2 & 1\\
@@ -205,13 +205,13 @@
    1 & 2 & 1
   \end{pmatrix}$. Dans cette matrice, les valeurs en (1,0), (0,1), (-1,0) et (0,-1) sont à 2, car 
   les équations 3 et 4 ont un coefficient non pas de $\frac{1}{4}$ mais de $\frac{1}{2}$, il faut
-  donc leur donner un poid deux plus important que le reste des voisins. Le reste des voisins n'ont 
-  qu'un poid de 1 dans le masque grâce à l'équation 1.\\
+  donc leur donner un poids deux fois plus important que le reste des voisins. Le reste des voisins n'a 
+  qu'un poids de 1 dans le masque grâce à l'équation 1.\\
   
-  Nous allons maintenant effectuer un dématriçage bilinéaire sur l'image CFA que nous avons calculé
-  précédement (configuration G-R-G). Pour cela nous créons trois images contenant les trois plan $\phi^k$.
-  Pour calculer ces plans nous créons une image et nous ne gardons que les pixels appartenant au plan considéré.
-  Par exemple pour calculer le plan $\phi^R$ nous allons garder les pixels rouge de l'image suivante et mettre tous 
+  Nous allons maintenant effectuer un dématriçage bilinéaire sur l'image CFA que nous avons calculée
+  précédement (configuration G-R-G). Pour cela nous créons trois images contenant les trois plans $\phi^k$.
+  Pour calculer ces plans, nous créons une image et nous ne gardons que les pixels appartenant au plan considéré.
+  Par exemple pour calculer le plan $\phi^R$ nous allons garder les pixels rouges de l'image suivante et mettre tous 
   les autres à 0.
   
   \begin{figure}[H]
@@ -220,7 +220,7 @@
   \end{figure}
 
   Une fois que nous obtenons les trois images représentant chaque plan, nous pouvons leur appliquer le masque de
-  convolution qui leur corresponde. Pour les plan $\phi^R$ et $\phi^B$ nous utilison le masque 
+  convolution qui leur correspond. Pour les plans $\phi^R$ et $\phi^B$ nous utilison le masque 
   $\begin{pmatrix}
     1/4 & 1/2 & 1/4\\
     1/2 & 1 & 1/2\\
@@ -233,9 +233,9 @@
    \end{pmatrix}$.
    Il reste alors à combiner les trois plans pour obtenir une image couleur.\\
    
-   Nous pouvons voir sur l'image résultante que les couleurs correspondent à l'image initial. Cependant,
-   l'image comporte des couleurs aberrantes qui résulte d'un équart important entre la couleur attendu
-   et la couleur calculé.
+   Nous pouvons voir sur l'image résultante que les couleurs correspondent à l'image initiale. Cependant,
+   l'image comporte des couleurs aberrantes qui résultent d'un écart important entre la couleur attendue
+   et la couleur calculée.
 
   \begin{figure}[H]
   \center
