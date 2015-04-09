@@ -163,16 +163,33 @@
   c'est après un dématriçage que l'image possèdera trois canaux représentant chaque composante couleur.
   
   \section{Dématriçage par interpolation bilinéaire}
-  Nous avons dans notre cours les quatre formules de dématriçage suivante :
   
+  Dans notre cas, nous traitons des images CFA dont la disposition est G-R-G. Il est donc possible de 
+  retrouver les pixels de chaque plan $\varphi^k$. Par exemple, on obtient pour le début du plan rouge 
+  les pixels sur la dispositions suivante:
+  
+  \begin{figure}[H]
+   \center
+   \includegraphics[width=3cm]{phi_r_cfa_export.png}
+   \caption{Disposition des pixels rouges}
+  \end{figure}
+  
+  Nous avons dans notre cours les quatre formules de dématriçage suivante :\\
+  
+  Configuration {GRG} (id. en {GBG}) :\\
   \begin{align}
-  B = \frac{1}{4} * (B_{-1,-1}+B_{1,-1}+B_{-1,1}+B_{1,1})\\
-  G = \frac{1}{4} * (G_{0,-1}+G_{-1,0}+G_{1,0}+G_{0,1})\\
-  R = \frac{1}{2} * (R_{-1,0}+R_{1,0})\\
-  B = \frac{1}{2} * (B_{0,-1}+B_{0,1})
+  B &= \frac{1}{4} * (B_{-1,-1}+B_{1,-1}+B_{-1,1}+B_{1,1})\\
+  G &= \frac{1}{4} * (G_{0,-1}+G_{-1,0}+G_{1,0}+G_{0,1})
   \end{align}
   
-  Cela nous permet dans un premier temps de définir le masque de la composante G $\frac{1}{4}$
+  Configuration {RGR} (id. en {BGB}) :\\
+  \begin{align}
+  R &= \frac{1}{2} * (R_{-1,0}+R_{1,0})\\
+  B &= \frac{1}{2} * (B_{0,-1}+B_{0,1})
+  \end{align}
+  
+  Nous pouvons alors déterminé les masques de convolution à appliquer sur le plan $\varphi^G$,
+  pour retrouver de la composante G, $\frac{1}{4}$
   $\begin{pmatrix}
    0 & 1 & 0\\
    1 & 4 & 1\\
@@ -228,11 +245,13 @@
    
   \section{Dématriçage basé sur l'estimation locale d'un gradient}
   
+  \newpage
  
   \section{Annexes}
   
+  \subsection{Plugin de la simulation d'un image cfa}
+  
   \begin{lstlisting}[caption=Code du premier exercie]
-   
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.GenericDialog;
@@ -240,18 +259,44 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
-public class Compute_cfa implements PlugInFilter {
 
-	ImagePlus imp; // Fenêtre contenant l'image de référence
-	int width; // Largeur de la fenêtre
-	int height; // Hauteur de la fenêtre
+public class compute_cfa implements PlugInFilter {
 
+	// ATRIBUTES //
+
+	public final static int	R_G_R = 0;
+	public final static int	B_G_B = 1;
+	public final static int	G_R_G = 2;
+	public final static int	G_B_G = 3;
+
+	/**
+	 * Fenêtre contenant l'image de référence
+	 */
+	private ImagePlus imp;
+
+	/**
+	 * Largeur de la fenêtre
+	 */
+	private int width;
+
+	/**
+	 * Hauteur de la fenêtre
+	 */
+	private int height;
+
+	// METHODS //
+
+	/**
+	 * Méthodes de configuration du plug-in, appelé en première. L'image sur
+	 * laquelle nous travaillons est l'image de référence en couleur.
+	 */
 	public int setup(String arg, ImagePlus imp) {
 		this.imp = imp;
 		return PlugInFilter.DOES_RGB;
 	}
 
 	public void run(ImageProcessor ip) {
+
 		// Lecture des dimensions de la fenêtre
 		width = imp.getWidth();
 		height = imp.getHeight();
@@ -271,61 +316,173 @@ public class Compute_cfa implements PlugInFilter {
 		int order = dia.getNextChoiceIndex();
 
 		// Génération de l'image CFA
-		/* à compléter */
-		final ImageProcessor CFA = cfa(order);
-		ImagePlus newImage = new ImagePlus("cfa simulation", CFA);
-		newImage.show();
+		ImageProcessor imageCfa = cfa(order);
+
+		ImagePlus frameCfa = new ImagePlus("Image CFA simulée", imageCfa);
+		frameCfa.show();
 	}
 
+	/**
+	 * Génère l'image CFA
+	 */
 	ImageProcessor cfa(int row_order) {
+
 
 		// Image couleur de référence et ses dimensions
 		ImageProcessor ip = imp.getProcessor();
 		width = imp.getWidth();
 		height = imp.getHeight();
 
-		int pixel_value = 0; // Valeur du pixel source
-		ImageProcessor cfa_ip = new ByteProcessor(width, height); // Image CFA
-																	// générée
+		int pixel_value = 0;	// Valeur du pixel source
+		ImageProcessor cfa_ip = new ByteProcessor(width,height);	// Image CFA générée
 
-		// Échantillons G
-		for (int y = 0; y < height; y += 2) {
-			for (int x = 0; x < width; x += 2) {
-				pixel_value = ip.getPixel(x, y);
-				int green = (int) (pixel_value & 0x00ff00) >> 8;
-				cfa_ip.putPixel(x, y, green);
+		switch(row_order){
+
+		case R_G_R:
+			// Échantillons G
+			for (int y=0; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
 			}
-		}
-		for (int y = 1; y < height; y += 2) {
-			for (int x = 1; x < width; x += 2) {
-				pixel_value = ip.getPixel(x, y);
-				int green = (int) (pixel_value & 0x00ff00) >> 8;
-				cfa_ip.putPixel(x, y, green);
+			for (int y=1; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
 			}
-		}
-		// Échantillons R
-		for (int y = 0; y < height; y += 2) {
-			for (int x = 1; x < width; x += 2) {
-				pixel_value = ip.getPixel(x, y);
-				int red = (int) (pixel_value & 0xff0000) >> 16;
-				cfa_ip.putPixel(x, y, red);
+			// Échantillons R
+			for (int y=0; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int red = (int)(pixel_value & 0xff0000)>>16;
+					cfa_ip.putPixel(x,y,red);
+				}
 			}
-		}
-		// Échantillons B
-		for (int y = 1; y < height; y += 2) {
-			for (int x = 0; x < width; x += 2) {
-				pixel_value = ip.getPixel(x, y);
-				int blue = (int) (pixel_value & 0x0000ff);
-				cfa_ip.putPixel(x, y, blue);
+			// Échantillons B
+			for (int y=1; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int blue = (int)(pixel_value & 0x0000ff);
+					cfa_ip.putPixel(x,y,blue);
+				}
 			}
+			break;
+			
+		case B_G_B:
+			// Échantillons G
+			for (int y=0; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			for (int y=1; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			// Échantillons R
+			for (int y=1; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int red = (int)(pixel_value & 0xff0000)>>16;
+					cfa_ip.putPixel(x,y,red);
+				}
+			}
+			// Échantillons B
+			for (int y=0; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int blue = (int)(pixel_value & 0x0000ff);
+					cfa_ip.putPixel(x,y,blue);
+				}
+			}
+			break;
+			
+		case G_R_G:
+			// Échantillons G
+			for (int y=0; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			for (int y=1; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			// Échantillons R
+			for (int y=0; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int red = (int)(pixel_value & 0xff0000)>>16;
+					cfa_ip.putPixel(x,y,red);
+				}
+			}
+			// Échantillons B
+			for (int y=1; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int blue = (int)(pixel_value & 0x0000ff);
+					cfa_ip.putPixel(x,y,blue);
+				}
+			}
+			break;
+			
+		case G_B_G:
+			// Échantillons G
+			for (int y=0; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			for (int y=1; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int green = (int)(pixel_value & 0x00ff00)>>8;
+					cfa_ip.putPixel(x,y,green);
+				}
+			}
+			// Échantillons B
+			for (int y=0; y<height; y+=2) {
+				for (int x=1; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int blue = (int)(pixel_value & 0x0000ff);
+					cfa_ip.putPixel(x,y,blue);
+				}
+			}
+			// Échantillons R
+			for (int y=1; y<height; y+=2) {
+				for (int x=0; x<width; x+=2) {
+					pixel_value = ip.getPixel(x,y);
+					int red = (int)(pixel_value & 0xff0000)>>16;
+					cfa_ip.putPixel(x,y,red);
+				}
+			}
+			break;
+			
 		}
 
 		return cfa_ip;
 	}
-
 }
   \end{lstlisting}
 
+  \subsection{Plugin de dématriçage par interpolation bilinéaire}
+  
   \begin{lstlisting}[caption=Code de la deuxieme partie du TP]
    
 import ij.ImagePlus;
@@ -412,6 +569,9 @@ public class Sample_cfa implements PlugInFilter {
 
 }
   \end{lstlisting}
+  
+  
+  \subsection{Plugin de dématriçage avec la méthode Hamilton \& Adams}
   
   \begin{lstlisting}[caption=Code de la troisième partie du TP]
    
