@@ -150,7 +150,7 @@
   est la position du pixel courant.\\
   
   La propriété de séparabilité de la transformé en cosinus nous permet d'appliqué le calcul d'une dimension
-  pour chacune des dimensions. Ainsi, nous ne fesons que réutiliser ce calcul pour les lignes, puis pour les 
+  pour les deux dimensions que nous allons traiter. Ainsi, nous ne fesons que réutiliser ce calcul pour les lignes, puis pour les 
   colonnes. Nous obtenons ainsi la matrice suivante :
   
   \begin{figure}[H]
@@ -159,10 +159,23 @@
   \end{figure}
 
   Nous pouvons voir que cette matrice ne permet pas encore de réduire l'information d'une image, car aucun des 
-  coefficient n'est null. Cependant nous remarquons que les norme des valeurs en haut à gauche de la matrice sont
+  coefficients ne sont null. Cependant, nous remarquons que les normes des valeurs en haut à gauche de la matrice sont
   bien plus grandes que celle en bas à droite. Nous allons voir comment utiliser ce calcul pour diminuer l'information
-  d'une image beaucoup plus grande.
+  d'une image de beaucoup plus grande taille.
   
   \section{Utilisation de la DCT pour la compression JPEG}
-
+  Le coût en calcul pour la transformé en cosinus discrète étant assez important, nous allons travailler sur des ROI\footnote{Region Of Interest}
+  que nous allons placer dans l'image. Nous allons donc découpé l'image en 8x8, puis appliquer la transformé sur chacune de ces parties.\\
+  %TODO explication roi
+  
+  Nous allons maintenant passer à la phase de quantification. Comme nous l'avons vu dans la partie précédente, nous avons, suite à
+  l'application de la transformé en cosinus discrète, une matrice possèdant des valeurs plus importantes dans son coin supérieur
+  gauche. Afin de minimiser l'imapacte de la compression sur l'image, nous allons chercher à garder les normes des valeurs les plus 
+  hautes qui correspondent aux hautes fréquences. %la j'avoue que je suis pu sur. On cherche bien a garder les hautes fréquences pendant une compression?
+  Nous allons donc effectuer une division bit à bit avec entre la matrice que nous avons obtenu dans la partie précédente 
+  et la matrice suivante : 
+  \begin{figure}[H]
+    \center
+   \includegraphics[width=10cm]{quantification.png}
+  \end{figure}
 \end{document}  
