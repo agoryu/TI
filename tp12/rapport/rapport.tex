@@ -131,9 +131,10 @@
   \clearpage
   
   \section{Introduction}
-  Le transfert et le stockage d'image sont de plus en plus fréquent et nécessite de limiter la taille
-  des fichiers. C'est pourquoi, lors de ce TP, nous allons voir comment est réalisé la compression 
-  JPEG utilisé dans le format JPG.
+  Le transfert et le stockage d'image sont de plus en plus fréquents et nécessitent parfois de limiter la taille
+  des fichiers. Pour cela il existe des algorithmes de compression d'image, dans certains cas il faut trouver 
+  un compromis entre le taux de compression et la qualité de l'image. Lors de ce TP, nous allons voir comment 
+  est réalisée la compression JPEG utilisé dans le format JPG.
   
   \section{Transformée en cosinus discrète}
   La transformée en cosinus discrète est une transformation ressemblant à la transformé de Fourrier sauf
@@ -143,7 +144,7 @@
   en cosinus discrète. Pour la fonction inverse, l'entré et la sortie de la fonction sont échangé.\\
   
   Dans un premier temps la fonction calcul les deux facteurs de normalisations $\sqrt{\frac{2}{M}}$ où M est
-  la taille du signal passé en paramètre, et c(u) qui vaut 1 si u est différent de 0 et $\frac{1}{\sqrt{2}}$ sinon.
+  la taille du signal passé en paramètre, et $c(u)$ qui vaut 1 si $u$ est différent de 0 et $\frac{1}{\sqrt{2}}$ sinon.
   Le paramètre \enquote{u} est  la position de la donné calculé. Et enfin, pour calculer une donnée la fonction
   fait la somme de toutes les autres multiplier par le cosinus de $\pi * \frac{(2m+1)*u}{2M}$ où \enquote{m}
   est la position du pixel courant.\\
@@ -157,7 +158,7 @@
    \includegraphics[width=10cm]{matrice_cosinus.png}
   \end{figure}
 
-  Nous pouvons voir que cette matrice ne permet pas encor de réduire l'information d'une image, car aucun des 
+  Nous pouvons voir que cette matrice ne permet pas encore de réduire l'information d'une image, car aucun des 
   coefficient n'est null. Cependant nous remarquons que les norme des valeurs en haut à gauche de la matrice sont
   bien plus grandes que celle en bas à droite. Nous allons voir comment utiliser ce calcul pour diminuer l'information
   d'une image beaucoup plus grande.
