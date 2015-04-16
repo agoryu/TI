@@ -65,15 +65,14 @@ public class DCT_plugin implements PlugInFilter {
 		FloatProcessor fp = ip.convertToFloatProcessor();
 		fp.add(-128);
 		
-		/*for(int y=0; y<BLOCK_SIZE; y++) {
+		for(int y=0; y<BLOCK_SIZE; y++) {
 			for(int x=0; x<BLOCK_SIZE; x++) {
 				fp.setRoi(x*(width/BLOCK_SIZE), y*(height/BLOCK_SIZE), width/BLOCK_SIZE, height/BLOCK_SIZE);
 				DCT2D.forwardDCT(fp);
-				fp.copyBits(bpQuantification, 0, 0, Blitter.DIVIDE);
 			}
-		}*/
+		}
 		
-		DCT2D.forwardDCT(fp);
+		/*DCT2D.forwardDCT(fp);*/
 		fp.copyBits(bpQuantification, 0, 0, Blitter.DIVIDE);
 		
 		//arrondi
@@ -89,15 +88,15 @@ public class DCT_plugin implements PlugInFilter {
 		
 		//Decompression
 		FloatProcessor fp2 = new FloatProcessor(fp.getFloatArray());
-		/*for(int y=0; y<BLOCK_SIZE; y++) {
+		fp2.copyBits(bpQuantification, 0, 0, Blitter.MULTIPLY);
+		for(int y=0; y<BLOCK_SIZE; y++) {
 			for(int x=0; x<BLOCK_SIZE; x++) {
 				fp2.setRoi(x*(width/BLOCK_SIZE), y*(height/BLOCK_SIZE), width/BLOCK_SIZE, height/BLOCK_SIZE);
-				fp2.copyBits(bpQuantification, 0, 0, Blitter.MULTIPLY);
 				DCT2D.inverseDCT(fp2);
 			}
-		}*/
-		fp2.copyBits(bpQuantification, 0, 0, Blitter.MULTIPLY);
-		DCT2D.inverseDCT(fp2);
+		}
+
+		/*DCT2D.inverseDCT(fp2);*/
 		fp2.add(128);
 		
 		ImagePlus frame2 = new ImagePlus("DCT2", fp2);
