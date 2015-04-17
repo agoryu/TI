@@ -1,3 +1,5 @@
+import javax.swing.JOptionPane;
+
 import ij.ImagePlus;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.Blitter;
@@ -63,6 +65,19 @@ public class DCT_plugin implements PlugInFilter {
 
 		// Compression
 		FloatProcessor fp = ip.convertToFloatProcessor();
+		FloatProcessor fpQuantification = bpQuantification.convertToFloatProcessor();
+		
+		int q = 75;
+		float alpha = 1;
+		
+		if (q >= 1 && q <= 50) {
+			alpha = 50 / (float)q;
+		} else if (q >= 51 && q <= 99) {
+			alpha = (float)2.0 - ((float)2.0 * (float)q / (float)100.0);
+		}
+		
+		fpQuantification.multiply(alpha);
+		
 		fp.add(-128);
 
 		for (int y = 0; y < height; y += BLOCK_SIZE) {
@@ -81,18 +96,17 @@ public class DCT_plugin implements PlugInFilter {
 				fp.setRoi(x, y, roiWidth, roiHeight);
 
 				DCT2D.forwardDCT(fp);
+				
+				fp.copyBits(fpQuantification, x, y, Blitter.DIVIDE);
 			}
 		}
-		
-		fp.setRoi(0, 0, width, height);
 
-		/* DCT2D.forwardDCT(fp); */
-		fp.copyBits(bpQuantification, 0, 0, Blitter.DIVIDE);
+		
 
 		// arrondi
 		for (int y = 0; y < width; y++) {
 			for (int x = 0; x < height; x++) {
-				int value = Math.round(fp.getf(x, y));
+				int value = Math.round(fp.getPixelValue(x, y));
 				fp.putPixelValue(x, y, value);
 			}
 		}
@@ -102,10 +116,11 @@ public class DCT_plugin implements PlugInFilter {
 
 		// Decompression
 		FloatProcessor fp2 = new FloatProcessor(fp.getFloatArray());
-		fp2.copyBits(bpQuantification, 0, 0, Blitter.MULTIPLY);
 
 		for (int y = 0; y < height; y += BLOCK_SIZE) {
 			for (int x = 0; x < width; x += BLOCK_SIZE) {
+				
+				fp2.copyBits(fpQuantification, x, y, Blitter.MULTIPLY);
 
 				int roiWidth = BLOCK_SIZE;
 				int roiHeight = BLOCK_SIZE;
@@ -121,10 +136,7 @@ public class DCT_plugin implements PlugInFilter {
 				DCT2D.inverseDCT(fp2);
 			}
 		}
-		
-		fp2.setRoi(x, y, roiWidth, roiHeight);
 
-		/* DCT2D.inverseDCT(fp2); */
 		fp2.add(128);
 
 		ImagePlus frame2 = new ImagePlus("DCT2", fp2);
