@@ -134,23 +134,24 @@
   Le transfert et le stockage d'image sont de plus en plus fréquents et nécessitent parfois de limiter la taille
   des fichiers. Pour cela il existe des algorithmes de compression d'image, dans certains cas il faut trouver 
   un compromis entre le taux de compression et la qualité de l'image. Lors de ce TP, nous allons voir comment 
-  est réalisée la compression JPEG utilisé dans le format JPG.
+  est réalisée la compression JPEG utilisée dans le format JPG.
   
   \section{Transformée en cosinus discrète}
-  La transformée en cosinus discrète est une transformation ressemblant à la transformé de Fourrier sauf
-  que sa projection créé des coefficient réel. Le calcul de cette transformé nous est fournit pour une dimension.
-  On peut voir que la fonction prend en paramètre un tableau à une dimension du signal que nous allons traiter.
-  La sortie de la fonction est un tableau de même taille correspondant au signal transformé par la transformé 
-  en cosinus discrète. Pour la fonction inverse, l'entré et la sortie de la fonction sont échangé.\\
+  La transformée en cosinus discrète est une transformation ressemblant à la transformée de Fourier sauf
+  que sa projection crée des coefficients réels. Le calcul de cette transformée nous est fourni pour une dimension.
+  On peut voir que la fonction prend en paramètre un tableau à une dimension représentant le signal que nous allons traiter.
+  La sortie de la fonction est un tableau de même taille correspondant au signal transformé par la transformée
+  en cosinus discrète. Pour la fonction inverse, l'entrée et la sortie de la fonction sont échangées.\\
   
-  Dans un premier temps la fonction calcul les deux facteurs de normalisations $\sqrt{\frac{2}{M}}$ où M est
+  Dans un premier temps la fonction calcule les deux facteurs de normalisation $\sqrt{\frac{2}{M}}$ où M est
   la taille du signal passé en paramètre, et $c(u)$ qui vaut 1 si $u$ est différent de 0 et $\frac{1}{\sqrt{2}}$ sinon.
-  Le paramètre \enquote{u} est  la position de la donné calculé. Et enfin, pour calculer une donnée la fonction
+  Le paramètre \enquote{u} est la position de la donnée calculée. 
+  Et enfin, pour calculer une donnée la fonction
   fait la somme de toutes les autres multiplier par le cosinus de $\pi * \frac{(2m+1)*u}{2M}$ où \enquote{m}
   est la position du pixel courant.\\
   
-  La propriété de séparabilité de la transformé en cosinus nous permet d'appliqué le calcul d'une dimension
-  pour les deux dimensions que nous allons traiter. Ainsi, nous ne fesons que réutiliser ce calcul pour les lignes, puis pour les 
+  La propriété de séparabilité de la transformé en cosinus nous permet d'appliquer le calcul d'une dimension
+  pour les deux dimensions que nous allons traiter. Ainsi, nous ne faisons que réutiliser ce calcul pour les lignes, puis pour les
   colonnes. Nous obtenons ainsi la matrice suivante :
   
   \begin{figure}[H]
@@ -158,11 +159,12 @@
    \includegraphics[width=10cm]{matrice_cosinus.png}
   \end{figure}
 
-  Nous pouvons voir que cette matrice ne permet pas encore de réduire l'information d'une image, car aucun des 
-  coefficients ne sont null. Cependant, nous remarquons que les normes des valeurs en haut à gauche de la matrice sont
-  bien plus grandes que celle en bas à droite. Nous allons voir comment utiliser ce calcul pour diminuer l'information
-  d'une image de beaucoup plus grande taille.
+  Nous pouvons voir que cette matrice ne permet pas encore de diminuer la quantité de données d'une image, car il n'y a pas de valeur 
+  nulle dans la matrice. Cependant, nous remarquons que les normes des valeurs en haut à gauche de la matrice sont bien plus grandes 
+  que celles en bas à droite. Nous allons voir comment utiliser ce calcul pour réduire la quantité de données d'une image de beaucoup 
+  plus grande taille.
   
+  %orthographe ok jusqu'ici
   \section{Utilisation de la DCT pour la compression JPEG}
   Le coût en calcul pour la transformé en cosinus discrète étant assez important, nous allons travailler sur des ROI\footnote{Region Of Interest}
   que nous allons placer dans l'image. Nous allons donc découpé l'image en 8x8, puis appliquer la transformé sur chacune de ces parties.\\
