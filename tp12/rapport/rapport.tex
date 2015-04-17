@@ -167,17 +167,39 @@
   %orthographe ok jusqu'ici
   \section{Utilisation de la DCT pour la compression JPEG}
   Le coût en calcul pour la transformé en cosinus discrète étant assez important, nous allons travailler sur des ROI\footnote{Region Of Interest}
-  que nous allons placer dans l'image. Nous allons donc découpé l'image en 8x8, puis appliquer la transformé sur chacune de ces parties.\\
-  %TODO explication roi
+  que nous allons placer dans l'image. Nous allons donc découper l'image en 8x8, puis appliquer la transformé sur chacune de ces parties.\\
   
   Nous allons maintenant passer à la phase de quantification. Comme nous l'avons vu dans la partie précédente, nous avons, suite à
-  l'application de la transformé en cosinus discrète, une matrice possèdant des valeurs plus importantes dans son coin supérieur
-  gauche. Afin de minimiser l'imapacte de la compression sur l'image, nous allons chercher à garder les normes des valeurs les plus 
-  hautes qui correspondent aux hautes fréquences. %la j'avoue que je suis pu sur. On cherche bien a garder les hautes fréquences pendant une compression?
-  Nous allons donc effectuer une division bit à bit avec entre la matrice que nous avons obtenu dans la partie précédente 
+  l'application de la transformé en cosinus discrète, une matrice possédant des valeurs plus importantes dans son coin supérieur
+  gauche. La compression JPEG étant destructrice nous allons chercher à minimiser l'impact de la compression sur l'image.
+  Pour cela nous gardons les normes des valeurs les plus hautes qui correspondent aux basses fréquences. Cela va atténuer
+  les informations de contour de l'image, tout en gardant les contours les plus importants. Donc nous diminuons les
+  détails de l'image.\\
+  
+  Nous allons donc effectuer une division bit à bit entre la matrice que nous avons obtenue dans la partie précédente 
   et la matrice suivante : 
   \begin{figure}[H]
     \center
    \includegraphics[width=10cm]{quantification.png}
   \end{figure}
+  
+  \section{Qualité et performance de la compression JPEG}
+  Afin de déterminer les données qui ont été supprimées lors de la compression, nous effectuons une décompression de l'image.
+  Pour cela, nous effectuons les opérations inverses de ce qui a été fait précédemment. Nous obtenons ainsi l'image suivante :
+  \begin{figure}[H]
+    \center
+   \includegraphics[width=5cm]{../result_lena.png}
+   \includegraphics[width=5cm]{../diff_lena.png}
+   \caption{Résultat de la décompression de l'image de Lena et différence entre l'original et la décompression}
+  \end{figure}
+  
+  Comme nous l'avons précisé précédemment on voit que les informations qui ont été enlevées lors de la compression sont 
+  des détails dans l'image.\\
+  
+  Il est possible de régler la qualité de la compression de l'image grâce à un facteur appliqué à la matrice de quantification.
+  Ce coefficients varie entre 1 et 100, plus la valeur est importante et moins il y a de compression et donc la qualité est bonne.\\
+  
+  %TODO tableau de résultat
+  
+  
 \end{document}  
