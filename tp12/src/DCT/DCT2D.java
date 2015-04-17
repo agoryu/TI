@@ -25,30 +25,30 @@ abstract public class DCT2D {
 
 		
 		// Traiter les lignes
-		for (int y = 0; y < newH; y++) {
+		for (int y = beginY; y < newH + beginY; y++) {
 
-			double[] row_F = DCT1D.forwardDCT(fp.getLine(0, y+beginY, newW - 1, y+beginY));
+			double[] row_F = DCT1D.forwardDCT(fp.getLine(beginX, y, beginX + newW - 1, y));
 
-			for (int x = 0; x < newW; x++) {
-				fp.putPixelValue(x+beginX, y+beginY, row_F[x]);
+			for (int x = beginX; x < newW + beginX; x++) {
+				fp.putPixelValue(x, y, row_F[x - beginX]);
 			}
 		}
 
 		// Traiter les colonnes de l'image résultant du traitement des
 		// lignes
-		for (int x = 0; x < newW; x++) {
+		for (int x = beginX; x < newW + beginX; x++) {
 
-			double[] col_f = new double[newW];
-			double[] col_F = new double[newW];
+			double[] col_f = new double[newH];
+			double[] col_F = new double[newH];
 
-			for (int y = 0; y < newH; y++) {
-				col_f[y] = fp.getPixelValue(beginX+x, beginY+y);
+			for (int y = beginY; y < newH + beginY; y++) {
+				col_f[y - beginY] = fp.getPixelValue(x, y);
 			}
 
 			col_F = DCT1D.forwardDCT(col_f);
 
-			for (int y = 0; y < newW; y++) {
-				fp.putPixelValue(beginX+x, beginY+y, col_F[y]);
+			for (int y = beginY; y < newH + beginY; y++) {
+				fp.putPixelValue(x, y, col_F[y - beginY]);
 			}
 		}
 	}
@@ -70,30 +70,30 @@ abstract public class DCT2D {
 
 		
 		// Traiter les lignes
-		for (int y = 0; y < newH; y++) {
+		for (int y = beginY; y < newH + beginY; y++) {
 
-			double[] row_F = DCT1D.inverseDCT(fp.getLine(0, y+beginY, newW - 1, y+beginY));
+			double[] row_F = DCT1D.inverseDCT(fp.getLine(beginX, y, beginX + newW - 1, y));
 
-			for (int x = 0; x < newW; x++) {
-				fp.putPixelValue(x+beginX, y+beginY, row_F[x]);
+			for (int x = beginX; x < newW + beginX; x++) {
+				fp.putPixelValue(x, y, row_F[x - beginX]);
 			}
 		}
 
 		// Traiter les colonnes de l'image résultant du traitement des
 		// lignes
-		for (int x = 0; x < newW; x++) {
+		for (int x = beginX; x < newW + beginX; x++) {
 
-			double[] col_f = new double[newW];
-			double[] col_F = new double[newW];
+			double[] col_f = new double[newH];
+			double[] col_F = new double[newH];
 
-			for (int y = 0; y < newH; y++) {
-				col_f[y] = fp.getPixelValue(beginX+x, beginY+y);
+			for (int y = beginY; y < newH + beginY; y++) {
+				col_f[y - beginY] = fp.getPixelValue(x, y);
 			}
 
 			col_F = DCT1D.inverseDCT(col_f);
 
-			for (int y = 0; y < newW; y++) {
-				fp.putPixelValue(beginX+x, beginY+y, col_F[y]);
+			for (int y = beginY; y < newH + beginY; y++) {
+				fp.putPixelValue(x, y, col_F[y - beginY]);
 			}
 		}
 	}
